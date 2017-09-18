@@ -1,13 +1,71 @@
 spring:
   application:
     name: eureka
+  datasource:   #单数据源配置
+    url: jdbc:mysql://104.155.222.47:3306/hello-world
+    username: root
+    password: root
+  http: #字符编码强制设为UTF-8
+    encoding:
+     charset: UTF-8
+     enabled: true
+     force: true
+    converters:
+      preferred-json-mapper: fastjson
+  jpa: #jpa
+    hibernate:
+      ddl-auto: update
 server:
-   port: 8761          # ָ����Eurekaʵ���Ķ˿�
+   port: 8761          # 指定该实例的端口
 eureka:
   client:
-    registerWithEureka: false
-    fetchRegistry: false
+    registerWithEureka: true  #false:不作为一个客户端注册到注册中心
+    fetchRegistry: false      #为true时，可以启动，但报异常：Cannot execute request on any known server
     serviceUrl:
       defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
   instance:
-   hostname: localhost         # ָ����Eurekaʵ����������
+   hostname: localhost         # 指定该Eureka实例的主机名
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 5000
+
+#请求和响应GZIP压缩支持
+feign:
+  compression:
+    request:
+      enabled: true
+      mime-types: text/xml,application/xml,application/json
+      min-request-size: 2048
+    response:
+      enabled: true
+
+# zuul 网关配置
+#zuul:
+#  ignored-services:                        #需要忽视的服务(配置后将不会被路由)
+#  routes:
+#    back:
+#      path: /back/**
+#      serviceId: admin-back
+
+#mybatis相关配置
+mybatis:
+    type-aliases-package: com.junliang.helloworld.pojo.entity
+    mapper-locations: classpath:mapper/*.xml
+
+mapper:
+    mappers:
+        - tk.mybatis.mapper.common.Mapper
+    not-empty: false
+    identity: MYSQL
+    before: true
+
+pagehelper:
+    helperDialect: mysql
+    reasonable: true
+    supportMethodsArguments: true
+    params: count=countSql
+
