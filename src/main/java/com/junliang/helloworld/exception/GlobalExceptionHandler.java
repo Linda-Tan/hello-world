@@ -1,6 +1,6 @@
 package com.junliang.helloworld.exception;
 
-import com.junliang.helloworld.constant.Constants;
+import com.junliang.helloworld.constant.ResponseConstants;
 import com.junliang.helloworld.pojo.vo.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,6 +21,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public BaseResponse otherExceptionHandler(HttpServletResponse response, Exception ex) {
         log.error(ex.getMessage(),ex);
-        return new BaseResponse(Constants.EX_OTHER_CODE, ex.getMessage());
+        return new BaseResponse(ResponseConstants.EX_OTHER_CODE, ex.getMessage());
     }
 }

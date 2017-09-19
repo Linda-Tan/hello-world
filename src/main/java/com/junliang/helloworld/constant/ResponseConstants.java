@@ -1,5 +1,5 @@
 package com.junliang.helloworld.constant;
 
-public class Constants {
+public class ResponseConstants {
     public static final Integer EX_OTHER_CODE = 500;
 }

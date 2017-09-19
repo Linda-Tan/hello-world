@@ -62,6 +62,7 @@ mapper:
     not-empty: false
     identity: MYSQL
     before: true
+    uuid: select uuid()
 
 pagehelper:
     helperDialect: mysql
