@@ -39,7 +39,7 @@ public class HelloWorldApplication {
 		});
 		return factory;
 	}*/
-	@Bean
+	/*@Bean
 	public HttpMessageConverters fastJsonHttpMessageConverters() {
 		FastJsonHttpMessageConverter fastConverter = new FastJsonHttpMessageConverter();
 		FastJsonConfig fastJsonConfig = new FastJsonConfig();
@@ -58,5 +58,5 @@ public class HelloWorldApplication {
 
 		HttpMessageConverter<?> converter = fastConverter;
 		return new HttpMessageConverters(converter);
-	}
+	}*/
 }

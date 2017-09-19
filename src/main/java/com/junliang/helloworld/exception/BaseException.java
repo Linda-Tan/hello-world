@@ -4,12 +4,13 @@ import lombok.Data;
 
 @Data
 public class BaseException extends RuntimeException {
-    private Integer status = 200;
+    private Integer status;
 
     public BaseException() {
+        this.status = 200;
     }
 
-    public BaseException(String message,int status) {
+    public BaseException(String message, int status) {
         super(message);
         this.status = status;
     }
