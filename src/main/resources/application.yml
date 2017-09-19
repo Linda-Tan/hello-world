@@ -55,6 +55,8 @@ feign:
 mybatis:
     type-aliases-package: com.junliang.helloworld.pojo.entity
     mapper-locations: classpath:mapper/*.xml
+    config-location: classpath:mybatis.xml
+    
 
 mapper:
     mappers:
@@ -62,7 +64,6 @@ mapper:
     not-empty: false
     identity: MYSQL
     before: true
-    uuid: select uuid()
 
 pagehelper:
     helperDialect: mysql

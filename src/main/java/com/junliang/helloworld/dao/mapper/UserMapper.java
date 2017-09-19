@@ -1,9 +1,10 @@
 package com.junliang.helloworld.dao.mapper;
 
-import com.junliang.helloworld.pojo.entity.User;
+import com.junliang.helloworld.pojo.domain.User;
+import org.mybatis.spring.annotation.MapperScan;
 import tk.mybatis.mapper.common.Mapper;
 
-@org.apache.ibatis.annotations.Mapper
-public interface UserMapper extends Mapper<User> {
 
+//@Mapper
+public interface UserMapper extends Mapper<User> {
 }

@@ -15,7 +15,6 @@ public class User {
 
     @Id
     @GenericGenerator(name="uuid", strategy="uuid") //这个是hibernate的注解/生成32位UUID
-    //@GeneratedValue(generator="idGenerator")
     @GeneratedValue(generator="uuid")
     private String id;
 

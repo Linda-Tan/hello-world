@@ -13,8 +13,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 public class HelloWorldApplicationTests {
 
-	//@Autowired
-	//private UserRepository userRepository;
+	@Autowired
+	private UserRepository userRepository;
 	@Autowired
 	private UserMapper userMapper;
 	@Test
@@ -23,9 +23,12 @@ public class HelloWorldApplicationTests {
 
 	@Test
 	public void test() throws Exception {
-		// 创建10条记录
-		//userRepository.save(new User());
-		userMapper.insert(new User());
+		 //创建10条记录
+		userRepository.save(new User());
+		userRepository.save(new User());
+		userRepository.save(new User());
+		userMapper.insert(new com.junliang.helloworld.pojo.domain.User());
+		userMapper.insert(new com.junliang.helloworld.pojo.domain.User());
 
 	}
 }
