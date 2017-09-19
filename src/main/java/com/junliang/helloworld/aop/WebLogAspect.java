@@ -20,25 +20,26 @@ public class WebLogAspect {
     ThreadLocal<Long> startTime = new ThreadLocal<>();
 
     @Pointcut("execution(public * com.junliang.helloworld.restcontrol..*.*(..))")
-    public void webLog(){}
+    public void logPointcut(){}
+    @org.aspectj.lang.annotation.Around("logPointcut()")
 
-    @Before("webLog()")
+    @Before("logPointcut()")
     public void doBefore(JoinPoint joinPoint) throws Throwable {
         startTime.set(System.currentTimeMillis());
         // 接收到请求，记录请求内容
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         // 记录下请求内容
-        log.info("URL : " + request.getRequestURL().toString());
-        log.info("HTTP_METHOD : " + request.getMethod());
-        log.info("IP : " + request.getRemoteAddr());
-        log.info("CLASS_METHOD : " + joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
-        log.info("ARGS : " + Arrays.toString(joinPoint.getArgs()));
+        log.info("Request URL : " + request.getRequestURL().toString());
+        log.info("http-method : " + request.getMethod());
+        log.info("Request IP : " + request.getRemoteAddr());
+        log.info("class.method() : " + joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
+        log.info("args[] : " + Arrays.toString(joinPoint.getArgs()));
     }
-    @AfterReturning(returning = "ret", pointcut = "webLog()")
+    @AfterReturning(returning = "ret", pointcut = "logPointcut()")
     public void doAfterReturning(Object ret) throws Throwable {
         // 处理完请求，返回内容
-        log.info("RESPONSE : " + ret);
-        log.info("SPEND TIME : " + (System.currentTimeMillis() - startTime.get()));
+        log.info("Response result : " + ret);
+        log.info("total time : " + (System.currentTimeMillis() - startTime.get()));
     }
 }
