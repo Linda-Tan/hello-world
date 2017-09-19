@@ -4,8 +4,8 @@ import lombok.Data;
 
 @Data
 public class BaseResponse {
-    private Integer status;
-    private String message;
+    Integer status;
+    String message;
 
 
     public BaseResponse() {

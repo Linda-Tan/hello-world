@@ -8,4 +8,6 @@ import org.springframework.context.annotation.Configuration;
 @MapperScan(basePackages = { "com.junliang.helloworld.dao.mapper" })
 public class MybatisConfig  {
 
+    //TODO 2017/9/19 配置多数数据源的事务管理
+
 }

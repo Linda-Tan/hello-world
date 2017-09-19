@@ -11,6 +11,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 @ConditionalOnClass({JSON.class})
@@ -35,7 +39,7 @@ public class FastJsonHttpMessageConvertersConfiguration {
             FastJsonConfig fastJsonConfig = new FastJsonConfig();//4
             fastJsonConfig.setSerializerFeatures(
                     SerializerFeature.PrettyFormat,
-                    SerializerFeature.WriteClassName,
+                    //SerializerFeature.WriteClassName,
                     SerializerFeature.WriteMapNullValue
             );
             ValueFilter valueFilter = new ValueFilter() {//5
@@ -50,6 +54,11 @@ public class FastJsonHttpMessageConvertersConfiguration {
                 }
             };
             fastJsonConfig.setSerializeFilters(valueFilter);
+
+            //处理中文乱码问题 已经在配置文件中强制转换utf-8.
+            //List<MediaType> fastMediaTypes = new ArrayList<>();
+            //fastMediaTypes.add(MediaType.APPLICATION_JSON_UTF8);
+            //converter.setSupportedMediaTypes(fastMediaTypes);
 
             converter.setFastJsonConfig(fastJsonConfig);
 
