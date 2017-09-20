@@ -72,4 +72,7 @@ pagehelper:
     supportMethodsArguments: true
     params: count=countSql
 
+jwt:
+  rsa-public-key-file-path: D:\Workspase\public.key
+  rsa-private-key-file-path: D:\Workspase\private.key
 

@@ -23,12 +23,14 @@ public class HelloWorldApplicationTests {
 
 	@Test
 	public void test() throws Exception {
-		 //创建10条记录
-		userRepository.save(new User());
-		userRepository.save(new User());
-		userRepository.save(new User());
-		userMapper.insert(new com.junliang.helloworld.pojo.domain.User());
-		userMapper.insert(new com.junliang.helloworld.pojo.domain.User());
+		 User user= new User();
+		 user.setName("admin");
+		 user.setPassword("password");
+		userRepository.save(user);
+		//userRepository.save(new User());
+		//userRepository.save(new User());
+		//userMapper.insert(new com.junliang.helloworld.pojo.domain.User());
+		//userMapper.insert(new com.junliang.helloworld.pojo.domain.User());
 
 	}
 }

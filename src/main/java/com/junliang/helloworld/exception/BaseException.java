@@ -10,7 +10,7 @@ public class BaseException extends RuntimeException {
         this.status = 200;
     }
 
-    public BaseException(String message, int status) {
+    public BaseException( int status,String message) {
         super(message);
         this.status = status;
     }

@@ -94,13 +94,20 @@ public class RSAHelper {
         osw.close();
     }
 
-    public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
+    public static void main(String[] args) throws Exception {
         //公钥文件路径
-        String publicKeyFilePath = "D:\\workspace\\public.key";
+        String publicKeyFilePath = "D:\\Workspase\\public.key";
         //私钥文件路径
-        String privateKeyFilePath = "D:\\workspace\\private.key";
-        generateBase64Key(publicKeyFilePath,privateKeyFilePath,"2121");
-
+        String privateKeyFilePath = "D:\\Workspase\\private.key";
+        //generateBase64Key(publicKeyFilePath,privateKeyFilePath,"2121");
+        //generateByteKey(publicKeyFilePath,privateKeyFilePath,"password");
+        String compactJws = Jwts.builder()
+                .setSubject("qw")
+                .setExpiration(Date.from(LocalDateTime.now().plusWeeks(1).atZone(ZoneId.of(ZoneId.SHORT_IDS.get("CTT"))).toInstant()))
+                .claim("1","2")
+                .signWith(SignatureAlgorithm.RS256, getPrivateKey(privateKeyFilePath))
+                .compact();
+        System.out.println(compactJws);
     }
     //public static void main(String[] args) throws Exception {
     //    //公钥文件路径
@@ -112,13 +119,7 @@ public class RSAHelper {
     //    //String publicKeyFilePath = "D:\\Work\\public.key";
     //    //generateKey(publicKeyFilePath,privateKeyFilePath,"2121");
     //
-    //    String compactJws = Jwts.builder()
-    //            .setSubject("qw")
-    //            .setExpiration(Date.from(LocalDateTime.now().plusWeeks(1).atZone(ZoneId.of(ZoneId.SHORT_IDS.get("CTT"))).toInstant()))
-    //            .claim("1","2")
-    //            .signWith(SignatureAlgorithm.RS256, getPrivateKey(privateKeyFilePath))
-    //            .compact();
-    //    System.out.println(compactJws);
+
     //    Jws<Claims> claimsJws = Jwts.parser().setSigningKey(getPublicKey(publicKeyFilePath)).parseClaimsJws(compactJws);
     //    Claims body = claimsJws.getBody();
     //    System.out.println(body.getSubject());
