@@ -1,20 +1,13 @@
 package com.junliang.helloworld;
 
-import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.alibaba.fastjson.support.config.FastJsonConfig;
-import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.web.HttpMessageConverters;
+import org.springframework.boot.context.embedded.undertow.UndertowEmbeddedServletContainerFactory;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 import org.springframework.cloud.netflix.zuul.EnableZuulServer;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageConverter;
-
-import java.util.ArrayList;
-import java.util.List;
+import io.undertow.Undertow.Builder;
 
 @EnableZuulServer
 @EnableEurekaClient
@@ -26,19 +19,16 @@ public class HelloWorldApplication {
 		SpringApplication.run(HelloWorldApplication.class, args);
 	}
 
-	/*@Bean
+	@Bean
 	public UndertowEmbeddedServletContainerFactory embeddedServletContainerFactory() {
-		UndertowEmbeddedServletContainerFactory factory = new UndertowEmbeddedServletContainerFactory();
-		factory.addBuilderCustomizers(new UndertowBuilderCustomizer() {
-
-			@Override
-			public void customize(Builder builder) {
-				builder.addHttpListener(8080, "0.0.0.0");
-			}
-
+		UndertowEmbeddedServletContainerFactory undertow = new UndertowEmbeddedServletContainerFactory();
+		undertow.addBuilderCustomizers((Builder builder) -> {
+			builder.addHttpListener(8762, "0.0.0.0");
 		});
-		return factory;
-	}*/
+		//log.info("\n*** Undertow http setting successful." + properties.getPort());
+		return undertow;
+	}
+
 	/*@Bean
 	public HttpMessageConverters fastJsonHttpMessageConverters() {
 		FastJsonHttpMessageConverter fastConverter = new FastJsonHttpMessageConverter();
@@ -59,4 +49,6 @@ public class HelloWorldApplication {
 		HttpMessageConverter<?> converter = fastConverter;
 		return new HttpMessageConverters(converter);
 	}*/
+
+
 }

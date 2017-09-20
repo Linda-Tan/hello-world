@@ -15,6 +15,7 @@ spring:
   jpa: #jpa
     hibernate:
       ddl-auto: update
+
 server:
    port: 8761          # 指定该实例的端口
 eureka:
@@ -70,4 +71,5 @@ pagehelper:
     reasonable: true
     supportMethodsArguments: true
     params: count=countSql
+
 

@@ -18,4 +18,8 @@ public class User {
     @GeneratedValue(generator="uuid")
     private String id;
 
+    private String name;
+
+    private String password;
+
 }

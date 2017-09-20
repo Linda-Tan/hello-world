@@ -1,4 +1,4 @@
-package com.junliang.helloworld.eureka.listener;
+package com.junliang.helloworld.config;
 
 import com.netflix.discovery.shared.Applications;
 import com.netflix.eureka.EurekaServerContextHolder;
