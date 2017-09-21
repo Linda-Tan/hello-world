@@ -34,15 +34,15 @@
         </javaTypeResolver>
 
 
-        <javaModelGenerator targetPackage="com.junliang.helloworld.pojo.domain"
+        <javaModelGenerator targetPackage="com.junliang.spring.pojo.domain"
                             targetProject="src/main/resources/generator"/>
 
         <!-- 生成mapxml文件 -->
-        <sqlMapGenerator targetPackage="com.junliang.helloworld.dao.mapping"
+        <sqlMapGenerator targetPackage="com.junliang.spring.dao.mapping"
                          targetProject="src/main/resources/generator"/>
 
 
-        <javaClientGenerator targetPackage="com.junliang.helloworld.dao" targetProject="src/main/resources/generator"
+        <javaClientGenerator targetPackage="com.junliang.spring.dao" targetProject="src/main/resources/generator"
                              type="XMLMAPPER"/>
 
         <!-- 配置表信息 -->

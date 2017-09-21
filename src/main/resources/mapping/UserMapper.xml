@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.junliang.helloworld.dao.UserMapper" >
-  <resultMap id="BaseResultMap" type="com.junliang.helloworld.pojo.domain.User" >
+<mapper namespace="com.junliang.spring.dao.UserMapper" >
+  <resultMap id="BaseResultMap" type="com.junliang.spring.pojo.domain.User" >
     <!--
       WARNING - @mbg.generated
     -->

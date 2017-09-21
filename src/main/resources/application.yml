@@ -45,16 +45,20 @@ feign:
       enabled: true
 
 # zuul 网关配置
-#zuul:
-#  ignored-services:                        #需要忽视的服务(配置后将不会被路由)
-#  routes:
-#    back:
-#      path: /back/**
-#      serviceId: admin-back
+zuul:
 
+#  ignored-services:                        #需要忽视的服务(配置后将不会被路由)
+  routes:
+    back:
+      path: /back/**
+      serviceId: admin-back
+  prefix: /api
+  ignore-url: /auth/token
+  token-header: access-token
+  pub-key.path: D:\workspace\public.key
 #mybatis相关配置
 mybatis:
-    type-aliases-package: com.junliang.helloworld.pojo.entity
+    type-aliases-package: com.junliang.spring.pojo.domain
     mapper-locations: classpath:mapper/*.xml
     config-location: classpath:mybatis.xml
     
@@ -73,6 +77,7 @@ pagehelper:
     params: count=countSql
 
 jwt:
-  rsa-public-key-file-path: D:\Workspase\public.key
-  rsa-private-key-file-path: D:\Workspase\private.key
+  rsa-public-key-file-path: D:\workspace\public.key
+  rsa-private-key-file-path: D:\workspace\private.key
+  token-header: access-token
 
