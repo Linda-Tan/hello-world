@@ -33,6 +33,7 @@
 		<jjwt.version>0.7.0</jjwt.version>
 		<commons-lang3.version>3.6</commons-lang3.version>
 		<mybatis-tool.version>1.1.0</mybatis-tool.version>
+		<HikariCP.version>2.7.1</HikariCP.version>
 
 		<swagger.version>2.7.0</swagger.version>
 	</properties>
@@ -77,6 +78,11 @@
 			<artifactId>mybatis-spring-boot-starter</artifactId>
 			<version>${mybatis.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.zaxxer</groupId>
+			<artifactId>HikariCP</artifactId>
+			<version>${HikariCP.version}</version>
+		</dependency>
 		<!--mapper-->
 		<dependency>
 			<groupId>tk.mybatis</groupId>
@@ -101,6 +107,10 @@
 					<groupId>org.springframework.boot</groupId>
 					<artifactId>spring-boot-starter-tomcat</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>org.apache.tomcat</groupId>
+					<artifactId>tomcat-jdbc</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
@@ -113,6 +123,7 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
@@ -135,11 +146,11 @@
 			<version>${fastjson.version}</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.alibaba/druid -->
-		<dependency>
+		<!--<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>druid-spring-boot-starter</artifactId>
 			<version>${druid.version}</version>
-		</dependency>
+		</dependency>-->`
 		<!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
