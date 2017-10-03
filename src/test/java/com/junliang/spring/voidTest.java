@@ -1,6 +1,11 @@
 package com.junliang.spring;
 
+import com.alibaba.fastjson.JSONObject;
+import com.junliang.spring.util.IOHelper;
 import org.junit.Test;
+import org.springframework.web.client.RestTemplate;
+
+import java.io.IOException;
 
 public class voidTest {
 
@@ -11,5 +16,23 @@ public class voidTest {
         System.out.println(json);
 
     }
+
+
+    @Test
+    public void getBingPicture() throws IOException {
+
+        RestTemplate restTemplate = new RestTemplate();
+        JSONObject jsonObject = restTemplate.getForObject("http://cn.bing.com/HPImageArchive.aspx?format=js&n=1", JSONObject.class);
+
+        String url = "http://cn.bing.com" + jsonObject.getJSONArray("images").getJSONObject(0).getString("url");
+        //String usrHome = System.getProperty("user.home");
+        String savePath = System.getProperty("user.home") + System.getProperty("file.separator") + "Pictures" + System.getProperty("file.separator") + "bing";
+        //System.out.println(savePath);
+        String filename = jsonObject.getJSONArray("images").getJSONObject(0).getString("copyright");
+        filename = filename.substring(0, filename.indexOf("，")) + ".jpg";
+
+        IOHelper.downLoadFromUrl(url, filename, savePath);
+    }
+
 
 }

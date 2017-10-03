@@ -2,7 +2,7 @@ spring:
   application:
     name: eureka
   datasource:   #单数据源配置
-    url: jdbc:mysql://104.155.222.47:3306/hello-world?characterEncoding=UTF8&useSSL=false
+    url: jdbc:mysql://104.155.222.47:3306/hello-world
     username: root
     password: root
   http: #字符编码强制设为UTF-8
@@ -19,16 +19,12 @@ spring:
     default-encoding: utf-8
     host: smtp.163.com
     username: li926893@163.com
-    password: li926893
+    password: tyf926893
     properties:
       mail:
         smtp:
           auth: true
-          timeout: 2500
-  thymeleaf:
-    cache: false
-    mode: LEGACYHTML5
-
+            timeout: 25000
 
 server:
    port: 8761          # 指定该实例的端口

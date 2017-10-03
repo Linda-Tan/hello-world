@@ -59,8 +59,8 @@ public class UserService {
                     .signWith(SignatureAlgorithm.RS256, RSAHelper.getPrivateKey(privateKeyFilePath))
                     .compact();
         } catch (Exception e) {
+           log.error(e.getMessage());
            throw new BaseException(5001,"生成Token失败。");
-           //log.error(e.getMessage());
         }
         return compactJws;
     }
