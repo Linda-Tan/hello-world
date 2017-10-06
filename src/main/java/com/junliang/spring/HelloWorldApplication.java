@@ -1,7 +1,7 @@
 package com.junliang.spring;
 
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
-import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter4;
+import io.undertow.Undertow.Builder;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.embedded.undertow.UndertowEmbeddedServletContainerFactory;
@@ -9,7 +9,6 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 import org.springframework.cloud.netflix.zuul.EnableZuulServer;
 import org.springframework.context.annotation.Bean;
-import io.undertow.Undertow.Builder;
 import org.springframework.web.client.RestTemplate;
 
 @EnableZuulServer
@@ -66,6 +65,7 @@ public class HelloWorldApplication {
 		HttpMessageConverter<?> converter = fastConverter;
 		return new HttpMessageConverters(converter);
 	}*/
+
 
 
 }

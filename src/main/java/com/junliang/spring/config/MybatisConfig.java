@@ -1,15 +1,81 @@
 package com.junliang.spring.config;
 
+import org.apache.ibatis.mapping.DatabaseIdProvider;
+import org.apache.ibatis.plugin.Interceptor;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.annotation.MapperScan;
+import org.mybatis.spring.boot.autoconfigure.ConfigurationCustomizer;
+import org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration;
+import org.mybatis.spring.boot.autoconfigure.MybatisProperties;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
+
+import javax.sql.DataSource;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Configuration
 //@EnableTransactionManagement
 @MapperScan(basePackages = { "com.junliang.spring.dao.mapper" })
-public class MybatisConfig  {
+public class MybatisConfig  extends MybatisAutoConfiguration {
 
 
-    //TODO 2017/9/20 可配置druid 多数据源
+
+    @Value("${spring.datasource.type}")
+    private Class<? extends DataSource> dataSourceType;
+
+    public MybatisConfig(MybatisProperties properties, ObjectProvider<Interceptor[]> interceptorsProvider, ResourceLoader resourceLoader, ObjectProvider<DatabaseIdProvider> databaseIdProvider, ObjectProvider<List<ConfigurationCustomizer>> configurationCustomizersProvider) {
+        super(properties, interceptorsProvider, resourceLoader, databaseIdProvider, configurationCustomizersProvider);
+    }
+    //TODO 2017/9/20 可配置多数据源
+
+    @Bean(name = "readDataSource")
+    @Qualifier("readDataSource")
+    @ConfigurationProperties(prefix="spring.datasource.read")
+    public DataSource readDataSource() {
+        return DataSourceBuilder.create().build();
+    }
+
+    @Primary
+    @Bean(name = "writeDataSource")
+    @Qualifier("writeDataSource")
+    @ConfigurationProperties(prefix="spring.datasource.write")
+    public DataSource writeDataSource() {
+        return DataSourceBuilder.create().build();
+    }
+
+
+    @Bean
+    public SqlSessionFactory sqlSessionFactorys() throws Exception {
+        return super.sqlSessionFactory(roundRobinDataSouceProxy());
+    }
+
+    /**
+     * 有多少个数据源就要配置多少个bean
+     * @return
+     */
+    @Bean
+    public AbstractRoutingDataSource roundRobinDataSouceProxy() {
+        DynamicDataSource proxy = new DynamicDataSource();
+        Map<Object, Object> targetDataSources = new HashMap<Object, Object>();
+        // 写
+        targetDataSources.put("writeDataSource", writeDataSource());
+        //读
+        targetDataSources.put("readDataSource", readDataSource());
+
+        proxy.setDefaultTargetDataSource(writeDataSource());
+        proxy.setTargetDataSources(targetDataSources);
+        return proxy;
+    }
 
 
     //TODO 2017/9/19 配置多数数据源的事务管理

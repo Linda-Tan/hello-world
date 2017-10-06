@@ -22,6 +22,8 @@ public class AuthController {
 
     @PostMapping("/token")
     public BaseResponse authorzie(String username, String password) {
+        userService.test1();
+        userService.test();
         //校验用户合法信息
         String token = userService.login(username, password);
 
