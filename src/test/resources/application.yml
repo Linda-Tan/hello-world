@@ -26,6 +26,7 @@ spring:
           auth: true
             timeout: 25000
 
+
 server:
    port: 8761          # 指定该实例的端口
 eureka:
@@ -70,9 +71,7 @@ zuul:
 mybatis:
     type-aliases-package: com.junliang.spring.pojo.domain
     mapper-locations: classpath:mapper/*.xml
-    config-location: classpath:mybatis.xml
     
-
 mapper:
     mappers:
         - tk.mybatis.mapper.common.Mapper
@@ -90,5 +89,13 @@ jwt:
   rsa-public-key-file-path: D:\workspace\public.key
   rsa-private-key-file-path: D:\workspace\private.key
   token-header: access-token
+logging:
+  level:
+    com:
+      junliang:
+        spring:
+          dao:
+            mapper: debug
+
 
 

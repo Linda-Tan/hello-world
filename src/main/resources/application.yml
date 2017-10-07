@@ -85,7 +85,6 @@ zuul:
 mybatis:
     type-aliases-package: com.junliang.spring.pojo.domain
     mapper-locations: classpath:mapper/*.xml
-    config-location: classpath:mybatis.xml
 mapper:
     mappers:
         - tk.mybatis.mapper.common.Mapper
@@ -125,10 +124,19 @@ pagehelper:
 #  configuration:
 #    map-underscore-to-camel-case: true
 #    cache-enabled: false
-
 jwt:
   rsa-public-key-file-path: D:\workspace\public.key
   rsa-private-key-file-path: D:\workspace\private.key
   token-header: access-token
+
+logging:
+  level:
+    com.junliang.spring.dao.mapper: debug
+  config: classpath:logback-old.xml
+
+#  file: ../log/spring-boot/spring_boot.%d{yyyy-MM-dd}.log
+#banner:
+#  image:
+#    location: static/image/springcloud.png
 
 
