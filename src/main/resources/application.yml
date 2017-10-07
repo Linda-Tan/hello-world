@@ -1,10 +1,18 @@
 spring:
   application:
     name: eureka
-  datasource:   #单数据源配置
-    url: jdbc:mysql://104.155.222.47:3306/hello-world?characterEncoding=UTF8&useSSL=false
-    username: root
-    password: root
+  datasource:   #多数据源配置
+    read:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://104.199.183.118:3306/hello-world?characterEncoding=UTF8&useSSL=false
+      username: root
+      password: root
+    write:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://104.155.222.47:3306/hello-world?characterEncoding=UTF8&useSSL=false
+      username: root
+      password: root
+    type: com.zaxxer.hikari.util.DriverDataSource
   http: #字符编码强制设为UTF-8
     encoding:
      charset: UTF-8
@@ -14,7 +22,10 @@ spring:
       preferred-json-mapper: fastjson
   jpa: #jpa
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
+      use-new-id-generator-mappings: true
+    show-sql: true
+    database: mysql
   mail:
     default-encoding: utf-8
     host: smtp.163.com
@@ -75,20 +86,45 @@ mybatis:
     type-aliases-package: com.junliang.spring.pojo.domain
     mapper-locations: classpath:mapper/*.xml
     config-location: classpath:mybatis.xml
-    
-
 mapper:
     mappers:
         - tk.mybatis.mapper.common.Mapper
     not-empty: false
     identity: MYSQL
     before: true
-
 pagehelper:
     helperDialect: mysql
     reasonable: true
     supportMethodsArguments: true
     params: count=countSql
+##mybatis -plus
+#mybatis-plus:
+#  mapper-locations: classpath:mapper/*.xml
+#  #实体扫描，多个package用逗号或者分号分隔
+#  typeAliasesPackage: com.junliang.spring.pojo.domain
+#  global-config:
+#    #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+#    id-type: 3
+#    #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
+#    field-strategy: 2
+#    #驼峰下划线转换
+#    db-column-underline: true
+#    #刷新mapper 调试神器
+#    refresh-mapper: true
+#    #数据库大写下划线转换
+#    #capital-mode: true
+#    #序列接口实现类配置
+#    #key-generator: com.baomidou.springboot.xxx
+#    #逻辑删除配置
+#    #logic-delete-value: 0
+#    #logic-not-delete-value: 1
+#    #自定义填充策略接口实现
+#    #meta-object-handler: com.baomidou.springboot.xxx
+#    #自定义SQL注入器
+#    #sql-injector: com.baomidou.springboot.xxx
+#  configuration:
+#    map-underscore-to-camel-case: true
+#    cache-enabled: false
 
 jwt:
   rsa-public-key-file-path: D:\workspace\public.key
