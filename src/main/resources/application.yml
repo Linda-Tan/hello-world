@@ -22,8 +22,10 @@ spring:
       preferred-json-mapper: fastjson
   jpa: #jpa
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
+      use-new-id-generator-mappings: true
     show-sql: true
+    database: mysql
   mail:
     default-encoding: utf-8
     host: smtp.163.com
