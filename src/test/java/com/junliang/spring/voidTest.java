@@ -29,7 +29,13 @@ public class voidTest {
         String savePath = System.getProperty("user.home") + System.getProperty("file.separator") + "Pictures" + System.getProperty("file.separator") + "bing";
         //System.out.println(savePath);
         String filename = jsonObject.getJSONArray("images").getJSONObject(0).getString("copyright");
-        filename = filename.substring(0, filename.indexOf("，")) + ".jpg";
+        try {
+
+            filename = filename.substring(0, filename.indexOf("，")) + ".jpg";
+        }catch (StringIndexOutOfBoundsException e){
+            e.printStackTrace();
+            filename = filename.substring(0, filename.indexOf("-")) + ".jpg";
+        }
 
         IOHelper.downLoadFromUrl(url, filename, savePath);
     }

@@ -1,5 +1,6 @@
 package com.junliang.spring.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.mapping.DatabaseIdProvider;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -10,6 +11,8 @@ import org.mybatis.spring.boot.autoconfigure.MybatisProperties;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -17,18 +20,26 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 @Configuration
-//@EnableTransactionManagement
+@AutoConfigureAfter({ DataSourceConfig.class })
+@Slf4j
 @MapperScan(basePackages = { "com.junliang.spring.dao.mapper" })
+@ConditionalOnClass({EnableTransactionManagement.class})
 public class MybatisConfig  extends MybatisAutoConfiguration {
 
 
+    @Resource(name = "writeDataSource")
+    private DataSource writeDataSource;
+
+    @Resource(name = "readDataSource")
+    private DataSource readDataSource;
 
     @Value("${spring.datasource.type}")
     private Class<? extends DataSource> dataSourceType;
@@ -36,22 +47,9 @@ public class MybatisConfig  extends MybatisAutoConfiguration {
     public MybatisConfig(MybatisProperties properties, ObjectProvider<Interceptor[]> interceptorsProvider, ResourceLoader resourceLoader, ObjectProvider<DatabaseIdProvider> databaseIdProvider, ObjectProvider<List<ConfigurationCustomizer>> configurationCustomizersProvider) {
         super(properties, interceptorsProvider, resourceLoader, databaseIdProvider, configurationCustomizersProvider);
     }
+
+
     //TODO 2017/9/20 可配置多数据源
-
-    @Bean(name = "readDataSource")
-    @Qualifier("readDataSource")
-    @ConfigurationProperties(prefix="spring.datasource.read")
-    public DataSource readDataSource() {
-        return DataSourceBuilder.create().build();
-    }
-
-    @Primary
-    @Bean(name = "writeDataSource")
-    @Qualifier("writeDataSource")
-    @ConfigurationProperties(prefix="spring.datasource.write")
-    public DataSource writeDataSource() {
-        return DataSourceBuilder.create().build();
-    }
 
 
     @Bean
@@ -68,11 +66,11 @@ public class MybatisConfig  extends MybatisAutoConfiguration {
         DynamicDataSource proxy = new DynamicDataSource();
         Map<Object, Object> targetDataSources = new HashMap<Object, Object>();
         // 写
-        targetDataSources.put("writeDataSource", writeDataSource());
+        targetDataSources.put("writeDataSource",writeDataSource);
         //读
-        targetDataSources.put("readDataSource", readDataSource());
+        targetDataSources.put("readDataSource", readDataSource);
 
-        proxy.setDefaultTargetDataSource(writeDataSource());
+        proxy.setDefaultTargetDataSource(writeDataSource);
         proxy.setTargetDataSources(targetDataSources);
         return proxy;
     }

@@ -6,8 +6,8 @@ import lombok.Setter;
 
 public enum StatusCodeEnum {
 
-    @Getter@Setter
-    EX_OTHER_CODE(5000,"");
+    EX_OTHER_CODE(5000,""),
+    EX_PRAM_ERROR(1002,"请求参数不正确");
 
     @Getter@Setter
     private int code;

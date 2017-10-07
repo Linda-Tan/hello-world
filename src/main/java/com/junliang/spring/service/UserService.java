@@ -56,6 +56,7 @@ public class UserService {
         return generateToken(userInfo);
     }
 
+    @DataSource(name = "readDataSource")
     public void test(){
 
         com.junliang.spring.pojo.domain.User user =new com.junliang.spring.pojo.domain.User();
