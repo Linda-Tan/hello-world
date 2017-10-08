@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 @Configuration
 public class AuthInterceptor extends HandlerInterceptorAdapter {
 
-    @Value("auth.token-header")
+    @Value("myProps.auth.token-header")
     private String tokenHeader;
 
     @Override

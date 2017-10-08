@@ -33,7 +33,7 @@ public class UserService {
     @Autowired
     private UserMapper userMapper;
 
-    @Value("${jwt.rsa-private-key-file-path}")
+    @Value("${myProps.jwt.rsa-private-key-file-path}")
     private String privateKeyFilePath;
 
     @DataSource(name = "readDataSource")

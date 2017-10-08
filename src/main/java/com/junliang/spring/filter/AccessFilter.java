@@ -25,10 +25,10 @@ public class AccessFilter extends ZuulFilter {
     private String zuulPrefix;
     @Value("${zuul.ignore-url}")
     private String ignoreUrl;
-    @Value("${jwt.token-header}")
+    @Value("${myProps.jwt.token-header}")
     private String jwtTokenHeader;
     //@Value("${jwt.pub-key.path}")
-    @Value("${jwt.rsa-public-key-file-path}")
+    @Value("${myProps.jwt.rsa-public-key-file-path}")
     private String pubKeyPath;
 
     @Override

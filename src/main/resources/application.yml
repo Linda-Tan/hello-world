@@ -42,8 +42,21 @@ spring:
   thymeleaf:
     cache: false
     mode: LEGACYHTML5
-
-
+#actuator begin
+management:
+  port: 54001
+  health:
+    mail:
+      enabled: false
+  security:
+    enabled: false
+info:
+  app:
+    name: "@project.name@" #从pom.xml中获取
+    description: "@project.description@"
+    version: "@project.version@"
+    spring-boot-version: "@project.parent.version@"
+#actuator end
 server:
    port: 8761          # 指定该实例的端口
 eureka:
@@ -54,6 +67,7 @@ eureka:
       defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
   instance:
    hostname: localhost         # 指定该Eureka实例的主机名
+
 hystrix:
   command:
     default:
@@ -126,10 +140,7 @@ pagehelper:
 #  configuration:
 #    map-underscore-to-camel-case: true
 #    cache-enabled: false
-jwt:
-  rsa-public-key-file-path: D:\workspace\public.key
-  rsa-private-key-file-path: D:\workspace\private.key
-  token-header: access-token
+
 
 logging:
   level:
@@ -142,3 +153,8 @@ logging:
 #    location: static/image/springcloud.png
 
 
+myProps: #自定义的属性和值
+  jwt:
+    rsa-public-key-file-path: D:\workspace\public.key
+    rsa-private-key-file-path: D:\workspace\private.key
+    token-header: access-token

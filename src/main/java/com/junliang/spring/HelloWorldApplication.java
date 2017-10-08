@@ -22,6 +22,11 @@ public class HelloWorldApplication {
 	}
 
 
+	//@Bean
+	//public ServerEndpointExporter serverEndpointExporter(){
+	//	return new ServerEndpointExporter();
+	//}
+
 	@Bean
 	public RestTemplate restTemplate(){
 		//TODO 2017/9/25 这里可以采用不同的实现方式。 比如：ClientHttpRequestFactory ，或自己设置messageConverters
