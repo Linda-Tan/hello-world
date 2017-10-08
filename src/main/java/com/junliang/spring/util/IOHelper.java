@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Date;
+import java.util.UUID;
 
 @Slf4j
 public class IOHelper {
@@ -54,5 +56,15 @@ public class IOHelper {
         }
         log.info("info:" + url + " download success");
 
+    }
+
+    public static String greaterNewFileName(String originalName) {
+        int pos = originalName.lastIndexOf(".");
+        // 获得上传的文件后缀
+        String suffix = originalName.substring(pos);
+        String name = originalName.substring(0, pos);
+        // 生成新的文件名
+        String newFileName = name + "~" + UUID.randomUUID().toString() + suffix;
+        return newFileName;
     }
 }

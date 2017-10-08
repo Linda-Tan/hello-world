@@ -20,6 +20,9 @@ spring:
      force: true
     converters:
       preferred-json-mapper: fastjson
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 1024MB
   jpa: #jpa
     hibernate:
       ddl-auto: none
@@ -71,7 +74,6 @@ feign:
 
 # zuul 网关配置
 zuul:
-
 #  ignored-services:                        #需要忽视的服务(配置后将不会被路由)
   routes:
     back:
@@ -132,7 +134,7 @@ jwt:
 logging:
   level:
     com.junliang.spring.dao.mapper: debug
-  config: classpath:logback-old.xml
+  config: classpath:logback-dev.xml
 
 #  file: ../log/spring-boot/spring_boot.%d{yyyy-MM-dd}.log
 #banner:
