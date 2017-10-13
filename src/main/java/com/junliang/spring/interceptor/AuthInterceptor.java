@@ -1,4 +1,4 @@
-package com.junliang.spring.config;
+package com.junliang.spring.interceptor;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
