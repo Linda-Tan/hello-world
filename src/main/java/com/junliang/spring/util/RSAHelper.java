@@ -3,6 +3,7 @@ package com.junliang.spring.util;
 import javax.crypto.Cipher;
 import java.io.*;
 import java.security.*;
+import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
@@ -17,7 +18,8 @@ public class RSAHelper {
      * @return
      * @throws Exception
      */
-    public static PublicKey getPublicKey(String filename) throws Exception {
+    public static PublicKey getPublicKey(String filename)
+            throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         File f = new File(filename);
         FileInputStream fis = new FileInputStream(f);
         DataInputStream dis = new DataInputStream(fis);
@@ -36,13 +38,32 @@ public class RSAHelper {
      * @return
      * @throws Exception
      */
-    public static PrivateKey getPrivateKey(String filename) throws Exception {
+    public static PrivateKey getPrivateKey(String filename)
+            throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         File f = new File(filename);
-        FileInputStream fis = new FileInputStream(f);
-        DataInputStream dis = new DataInputStream(fis);
+        DataInputStream dis = new DataInputStream(new FileInputStream(f));
         byte[] keyBytes = new byte[(int) f.length()];
         dis.readFully(keyBytes);
         dis.close();
+        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
+        KeyFactory kf = KeyFactory.getInstance("RSA");
+        return kf.generatePrivate(spec);
+    }
+
+    public static PrivateKey getPrivateKey(File filename)
+            throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
+        InputStreamReader isr = new InputStreamReader(new FileInputStream(filename));
+
+        String content = new String();
+        try{
+            int len = 0;
+            while((len = isr.read()) != -1){
+                content = content + (char)len;
+            }
+        }finally{
+            isr.close();
+        }
+        byte[] keyBytes = Base64.getDecoder().decode(content);
         PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
         KeyFactory kf = KeyFactory.getInstance("RSA");
         return kf.generatePrivate(spec);
@@ -53,11 +74,12 @@ public class RSAHelper {
      *
      * @param publicKeyFilename
      * @param privateKeyFilename
-     * @param password not null
+     * @param password           not null
      * @throws IOException
      * @throws NoSuchAlgorithmException
      */
-    public static Map<String, byte[]> generateByteKey(String publicKeyFilename, String privateKeyFilename, String password) throws IOException, NoSuchAlgorithmException {
+    public static Map<String, byte[]> generateByteKey(String publicKeyFilename, String privateKeyFilename, String password)
+            throws IOException, NoSuchAlgorithmException {
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
         SecureRandom secureRandom = new SecureRandom(password.getBytes());
         keyPairGenerator.initialize(1024, secureRandom);
@@ -79,15 +101,17 @@ public class RSAHelper {
 
     /**
      * 生成rsa公钥和密钥 base64 encode 文件
-     * @deprecated 对rsa进行base64编码后写入文件，文件夹不存在抛异常。
+     *
      * @param publicKeyFilename
      * @param privateKeyFilename
-     * @param password not null
+     * @param password           not null
      * @throws IOException
      * @throws NoSuchAlgorithmException
+     * @deprecated 对rsa进行base64编码后写入文件，文件夹不存在抛异常。
      */
     @Deprecated
-    public static void generateBase64Key(String publicKeyFilename, String privateKeyFilename, String password) throws IOException, NoSuchAlgorithmException {
+    public static void generateBase64Key(String publicKeyFilename, String privateKeyFilename, String password)
+            throws IOException, NoSuchAlgorithmException {
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
         SecureRandom secureRandom = new SecureRandom(password.getBytes());
         keyPairGenerator.initialize(1024, secureRandom);
@@ -174,11 +198,9 @@ public class RSAHelper {
     /**
      * 用私钥对信息生成数字签名
      *
-     * @param data Base64
-     *            加密数据
-     * @param privateKey
-     *            私钥
-     *
+     * @param data       Base64
+     *                   加密数据
+     * @param privateKey 私钥
      * @return sign Base64 encode
      * @throws Exception
      */
@@ -191,19 +213,15 @@ public class RSAHelper {
 
         return Base64.getEncoder().encodeToString(signature.sign());
     }
+
     /**
      * 校验数字签名
      *
-     * @param data
-     *            加密数据
-     * @param publicKey
-     *            公钥
-     * @param sign
-     *            数字签名
-     *
+     * @param data      加密数据
+     * @param publicKey 公钥
+     * @param sign      数字签名
      * @return 校验成功返回true 失败返回false
      * @throws Exception
-     *
      */
     public static boolean verify(String data, PublicKey publicKey, String sign)
             throws Exception {
