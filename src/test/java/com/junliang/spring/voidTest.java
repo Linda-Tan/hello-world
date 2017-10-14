@@ -22,7 +22,7 @@ public class voidTest {
     public void getBingPicture() throws IOException {
 
         RestTemplate restTemplate = new RestTemplate();
-        JSONObject jsonObject = restTemplate.getForObject("http://cn.bing.com/HPImageArchive.aspx?format=js&n=1", JSONObject.class);
+        JSONObject jsonObject = restTemplate.getForObject("https://cn.bing.com/HPImageArchive.aspx?format=js&n=1", JSONObject.class);
 
         String url = "http://cn.bing.com" + jsonObject.getJSONArray("images").getJSONObject(0).getString("url");
         //String usrHome = System.getProperty("user.home");
@@ -36,7 +36,7 @@ public class voidTest {
             e.printStackTrace();
             filename = filename.substring(0, filename.indexOf("-")) + ".jpg";
         }
-
+        System.out.println(savePath);
         IOHelper.downLoadFromUrl(url, filename, savePath);
     }
 

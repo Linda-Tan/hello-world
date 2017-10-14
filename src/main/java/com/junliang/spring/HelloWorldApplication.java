@@ -27,14 +27,9 @@ public class HelloWorldApplication {
 	//	return new ServerEndpointExporter();
 	//}
 
-	@Bean
-	public RestTemplate restTemplate(){
-		//TODO 2017/9/25 这里可以采用不同的实现方式。 比如：ClientHttpRequestFactory ，或自己设置messageConverters
-		//http://www.jianshu.com/p/c9644755dd5e
-		RestTemplate  restTemplate=	 new RestTemplate();
-		restTemplate.getMessageConverters().add(new FastJsonHttpMessageConverter());
-		return restTemplate;
-	}
+
+
+
 	//@Bean
 	//public AccessFilter accessFilter(){
 	//	return new AccessFilter();

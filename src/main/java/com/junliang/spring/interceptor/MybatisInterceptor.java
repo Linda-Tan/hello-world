@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ibatis.executor.statement.StatementHandler;
@@ -23,12 +24,12 @@ import org.apache.ibatis.session.defaults.DefaultSqlSession.StrictMap;
 /**
  * Sql执行时间记录拦截器
  */
+@Slf4j
 @Intercepts({
         @Signature(type = StatementHandler.class, method = "query", args = { Statement.class, ResultHandler.class }),
         @Signature(type = StatementHandler.class, method = "update", args = { Statement.class }),
         @Signature(type = StatementHandler.class, method = "batch", args = { Statement.class }) })
 public class MybatisInterceptor implements Interceptor {
-    protected final Log logger = LogFactory.getLog(getClass());
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
@@ -56,7 +57,7 @@ public class MybatisInterceptor implements Interceptor {
 
             // 计算sql执行耗时
             long sqlCost = endTime - startTime;
-            logger.debug("SQL：[" + sql + "]执行耗时[" + sqlCost + "ms]");
+            log.debug("SQL：[" + sql + "]执行耗时[" + sqlCost + "ms]");
         }
 
         return retObj;

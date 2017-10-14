@@ -151,7 +151,9 @@ logging:
 #banner:
 #  image:
 #    location: static/image/springcloud.png
-
+banner:
+  charset: UTF-8
+  location: static/banner.txt
 
 myProps: #自定义的属性和值
   jwt:
