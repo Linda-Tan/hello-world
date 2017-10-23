@@ -32,7 +32,7 @@ public class RSAHelper {
     }
 
     /**
-     * 获取密钥
+     * 获取私钥
      *
      * @param filename
      * @return
@@ -50,20 +50,20 @@ public class RSAHelper {
         return kf.generatePrivate(spec);
     }
 
-    public static PrivateKey getPrivateKey(File filename)
+    public static PrivateKey getBase64PrivateKey(String filepath)
             throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
-        InputStreamReader isr = new InputStreamReader(new FileInputStream(filename));
-
-        String content = new String();
+        File file =new File(filepath);
+        InputStreamReader isr = new InputStreamReader(new FileInputStream(file));
+        StringBuilder content = new StringBuilder();
         try{
-            int len = 0;
+            int len;
             while((len = isr.read()) != -1){
-                content = content + (char)len;
+                content.append((char) len);
             }
         }finally{
             isr.close();
         }
-        byte[] keyBytes = Base64.getDecoder().decode(content);
+        byte[] keyBytes = Base64.getDecoder().decode(content.toString());
         PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
         KeyFactory kf = KeyFactory.getInstance("RSA");
         return kf.generatePrivate(spec);
