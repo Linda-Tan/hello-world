@@ -10,7 +10,13 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.junliang.spring.util.IOHelper.readFile;
+
 public class RSAHelper {
+
+
+
+
     /**
      * 获取公钥
      *
@@ -26,6 +32,14 @@ public class RSAHelper {
         byte[] keyBytes = new byte[(int) f.length()];
         dis.readFully(keyBytes);
         dis.close();
+        X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
+        KeyFactory kf = KeyFactory.getInstance("RSA");
+        return kf.generatePublic(spec);
+    }
+
+    public static PublicKey getBase64PublicKey(String filepath)
+            throws InvalidKeySpecException, NoSuchAlgorithmException, IOException {
+        byte[] keyBytes = Base64.getDecoder().decode(IOHelper.readFile(filepath));
         X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
         KeyFactory kf = KeyFactory.getInstance("RSA");
         return kf.generatePublic(spec);
@@ -52,18 +66,7 @@ public class RSAHelper {
 
     public static PrivateKey getBase64PrivateKey(String filepath)
             throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
-        File file =new File(filepath);
-        InputStreamReader isr = new InputStreamReader(new FileInputStream(file));
-        StringBuilder content = new StringBuilder();
-        try{
-            int len;
-            while((len = isr.read()) != -1){
-                content.append((char) len);
-            }
-        }finally{
-            isr.close();
-        }
-        byte[] keyBytes = Base64.getDecoder().decode(content.toString());
+        byte[] keyBytes = Base64.getDecoder().decode(IOHelper.readFile(filepath));
         PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
         KeyFactory kf = KeyFactory.getInstance("RSA");
         return kf.generatePrivate(spec);

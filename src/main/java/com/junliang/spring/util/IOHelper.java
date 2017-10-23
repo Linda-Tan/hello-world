@@ -67,4 +67,19 @@ public class IOHelper {
         String newFileName = name + "~" + UUID.randomUUID().toString() + suffix;
         return newFileName;
     }
+
+    public static String readFile(String filepath) throws IOException {
+        File file =new File(filepath);
+        InputStreamReader isr = new InputStreamReader(new FileInputStream(file));
+        StringBuilder content = new StringBuilder();
+        try {
+            int len;
+            while ((len = isr.read()) != -1) {
+                content.append((char) len);
+            }
+        }finally{
+            isr.close();
+        }
+        return content.toString();
+    }
 }
