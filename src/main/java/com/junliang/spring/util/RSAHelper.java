@@ -10,12 +10,8 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.junliang.spring.util.IOHelper.readFile;
 
 public class RSAHelper {
-
-
-
 
     /**
      * 获取公钥
@@ -37,6 +33,7 @@ public class RSAHelper {
         return kf.generatePublic(spec);
     }
 
+    @Deprecated
     public static PublicKey getBase64PublicKey(String filepath)
             throws InvalidKeySpecException, NoSuchAlgorithmException, IOException {
         byte[] keyBytes = Base64.getDecoder().decode(IOHelper.readFile(filepath));
@@ -64,6 +61,7 @@ public class RSAHelper {
         return kf.generatePrivate(spec);
     }
 
+    @Deprecated
     public static PrivateKey getBase64PrivateKey(String filepath)
             throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
         byte[] keyBytes = Base64.getDecoder().decode(IOHelper.readFile(filepath));
@@ -238,23 +236,25 @@ public class RSAHelper {
         return signature.verify(decode);
     }
 
-    /*public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
         //公钥文件路径
         String publicKeyFilePath = "D:\\workspace\\public.key";
         //私钥文件路径
         String privateKeyFilePath = "D:\\workspace\\private.key";
         //对rsa进行base64编码后写入文件，文件夹不存在抛异常。
         generateBase64Key(publicKeyFilePath,privateKeyFilePath,"password");
-        generateByteKey(publicKeyFilePath,privateKeyFilePath,"password");
-        PrivateKey privateKey = getPrivateKey(privateKeyFilePath);
-        PublicKey publicKey = getPublicKey(publicKeyFilePath);
-        String encrypt = encrypt("date", privateKey);
-        System.out.println(encrypt);
+        PrivateKey privateKey = getBase64PrivateKey(privateKeyFilePath);
+        PublicKey publicKey = getBase64PublicKey(publicKeyFilePath);
+        //generateByteKey(publicKeyFilePath,privateKeyFilePath,"password");
+        //PrivateKey privateKey = getPrivateKey(privateKeyFilePath);
+        //PublicKey publicKey = getPublicKey(publicKeyFilePath);
+        String encrypt = encrypt("data", privateKey);
+        System.out.println("加密后："+encrypt);
         String decrypt = decrypt(encrypt, publicKey);
-        System.out.println(decrypt);
+        System.out.println("解密后："+decrypt);
         String sign = sign(encrypt, privateKey);
         System.out.println(sign);
         boolean verify = verify(encrypt, publicKey, sign);
         System.out.println(verify);
-    }*/
+    }
 }

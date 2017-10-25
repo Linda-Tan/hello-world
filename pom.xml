@@ -37,6 +37,7 @@
 		<HikariCP.version>2.7.1</HikariCP.version>
 
 		<swagger.version>2.7.0</swagger.version>
+		<nekohtml.version>1.9.22</nekohtml.version>
 	</properties>
 
 	<dependencies>
@@ -230,7 +231,7 @@
 		<dependency>
 			<groupId>net.sourceforge.nekohtml</groupId>
 			<artifactId>nekohtml</artifactId>
-			<version>1.9.22</version>
+			<version>${nekohtml.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -264,6 +265,11 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>
+						com.junliang.spring.HelloWorldApplication
+					</mainClass>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
