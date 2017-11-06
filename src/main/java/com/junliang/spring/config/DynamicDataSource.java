@@ -1,6 +1,5 @@
 package com.junliang.spring.config;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 
 /**
@@ -31,7 +30,9 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
      * 获取数据源类型
      */
     public static String getDataSourceType() {
-        System.out.println(STRING_THREAD_LOCAL.get());
+        //System.out.println(STRING_THREAD_LOCAL.get());
+        //if (STRING_THREAD_LOCAL.get()==null)
+        //    return   DataSourceConfig.WRITE_DATASOURCE_KEY;
         return STRING_THREAD_LOCAL.get();
     }
 

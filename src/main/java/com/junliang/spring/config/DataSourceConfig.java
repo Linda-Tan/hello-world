@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import javax.annotation.Resource;
 import javax.sql.DataSource;
 
 @Slf4j
@@ -33,6 +32,7 @@ public class DataSourceConfig extends DataSourceTransactionManagerAutoConfigurat
     public DataSource writeDataSource() {
         return DataSourceBuilder.create().build();
     }
+
 
     /**
      * 自定义事务

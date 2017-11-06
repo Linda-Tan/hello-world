@@ -29,6 +29,8 @@ spring:
       use-new-id-generator-mappings: true
     show-sql: true
     database: mysql
+    database-platform: org.hibernate.dialect.MySQL5Dialect
+
   mail:
     default-encoding: utf-8
     host: smtp.163.com
