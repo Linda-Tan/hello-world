@@ -82,4 +82,16 @@ public class IOHelper {
         }
         return content.toString();
     }
+    //从指定目录下查找指定文件
+    public static void findFile(File root,String fileName,ArrayList<File> rs){
+        if(!root.isDirectory()){
+            if(fileName.equals(root.getName())){
+                rs.add(root);
+            }
+        }else{
+            for (File f : root.listFiles()) {
+                findFile(f, fileName,rs);
+            }
+        }
+    }
 }
