@@ -1,6 +1,7 @@
 package com.junliang.spring.service;
 
 import com.junliang.spring.aop.DataSource;
+import com.junliang.spring.config.DataSourceConfig;
 import com.junliang.spring.dao.mapper.UserMapper;
 import com.junliang.spring.dao.repository.UserRepository;
 import com.junliang.spring.exception.BaseException;
@@ -56,21 +57,21 @@ public class UserService {
         return generateToken(userInfo);
     }
 
-    @DataSource()
+    @DataSource
     public void test(){
 
         com.junliang.spring.pojo.domain.User user =new com.junliang.spring.pojo.domain.User();
-        user.setName("admin1");
-        user.setPassword("password2");
+        user.setName("userMapper");
+        user.setPassword("userMapper");
         userMapper.insert(user);
     }
 
-    @DataSource(name = "readDataSource")
+    @DataSource
     public void test1(){
 
         User user = new User();
-        user.setName("admin1");
-        user.setPassword("password2");
+        user.setName("userRepository");
+        user.setPassword("userRepository");
         userRepository.save(user);
     }
 

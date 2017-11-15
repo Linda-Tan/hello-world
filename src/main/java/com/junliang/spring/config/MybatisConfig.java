@@ -9,16 +9,12 @@ import org.mybatis.spring.boot.autoconfigure.ConfigurationCustomizer;
 import org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration;
 import org.mybatis.spring.boot.autoconfigure.MybatisProperties;
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -31,6 +27,7 @@ import java.util.Map;
 @AutoConfigureAfter({ DataSourceConfig.class })
 @Slf4j
 @MapperScan(basePackages = { "com.junliang.spring.dao.mapper" })
+@EnableTransactionManagement
 @ConditionalOnClass({EnableTransactionManagement.class})
 public class MybatisConfig  extends MybatisAutoConfiguration {
 
@@ -41,8 +38,9 @@ public class MybatisConfig  extends MybatisAutoConfiguration {
     @Resource(name = "readDataSource")
     private DataSource readDataSource;
 
-    @Value("${spring.datasource.type}")
-    private Class<? extends DataSource> dataSourceType;
+    /*@Resource(name = "routingDataSource")
+    private DataSource routingDataSource;*/
+
 
     public MybatisConfig(MybatisProperties properties, ObjectProvider<Interceptor[]> interceptorsProvider, ResourceLoader resourceLoader, ObjectProvider<DatabaseIdProvider> databaseIdProvider, ObjectProvider<List<ConfigurationCustomizer>> configurationCustomizersProvider) {
         super(properties, interceptorsProvider, resourceLoader, databaseIdProvider, configurationCustomizersProvider);
@@ -61,10 +59,10 @@ public class MybatisConfig  extends MybatisAutoConfiguration {
      * 有多少个数据源就要配置多少个bean
      * @return
      */
-    @Bean
+    @Bean(name="routingDataSource")
     public AbstractRoutingDataSource roundRobinDataSouceProxy() {
         DynamicDataSource proxy = new DynamicDataSource();
-        Map<Object, Object> targetDataSources = new HashMap<Object, Object>();
+        Map<Object, Object> targetDataSources = new HashMap<Object, Object>(2);
         // 写
         targetDataSources.put("writeDataSource",writeDataSource);
         //读
@@ -75,6 +73,16 @@ public class MybatisConfig  extends MybatisAutoConfiguration {
         return proxy;
     }
 
+    /**
+     * 自定义事务
+     * MyBatis自动参与到spring事务管理中，无需额外配置，只要org.mybatis.spring.SqlSessionFactoryBean引用的数据源与DataSourceTransactionManager引用的数据源一致即可，否则事务管理会不起作用。
+     * @return
+     */
+    @Bean(name = "transactionManager")
+    public DataSourceTransactionManager transactionManagers() {
+        log.info("-------------------- transactionManager init ---------------------");
+        return new DataSourceTransactionManager(roundRobinDataSouceProxy());
+    }
 
     //TODO 2017/9/19 配置多数数据源的事务管理
 

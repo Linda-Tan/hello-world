@@ -3,16 +3,27 @@ spring:
     name: eureka
   datasource:   #多数据源配置
     read:
-      driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://104.199.183.118:3306/hello-world?characterEncoding=UTF8&useSSL=false
+      url: jdbc:mysql://104.199.183.118:3306/hello-world?useUnicode=true&characterEncoding=utf8&useSSL=false
       username: root
       password: root
+      driver-class-name: com.mysql.jdbc.Driver
     write:
-      driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://104.155.222.47:3306/hello-world?characterEncoding=UTF8&useSSL=false
+      url: jdbc:mysql://104.155.222.47:3306/hello-world?useUnicode=true&characterEncoding=utf8&useSSL=false
       username: root
       password: root
-    type: com.zaxxer.hikari.util.DriverDataSource
+      driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+
+  jpa: #jpa
+    hibernate:
+      ddl-auto: none
+      use-new-id-generator-mappings: true
+    show-sql: true
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5Dialect
+#    properties:
+#      hibernate.connection.provider_class: com.zaxxer.hikari.hibernate.HikariConnectionProvider
+
   http: #字符编码强制设为UTF-8
     encoding:
      charset: UTF-8
@@ -23,14 +34,7 @@ spring:
     multipart:
       max-file-size: 100MB
       max-request-size: 1024MB
-  jpa: #jpa
-    hibernate:
-      ddl-auto: none
-      use-new-id-generator-mappings: true
-    show-sql: true
-    database: mysql
-    database-platform: org.hibernate.dialect.MySQL5Dialect
-
+#邮箱
   mail:
     default-encoding: utf-8
     host: smtp.163.com
