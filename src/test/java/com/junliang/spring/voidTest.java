@@ -2,12 +2,24 @@ package com.junliang.spring;
 
 import com.alibaba.fastjson.JSONObject;
 import com.junliang.spring.util.IOHelper;
+import org.jasypt.encryption.StringEncryptor;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 
 public class voidTest {
+
+    @Autowired
+    StringEncryptor stringEncryptor;
+
+    @Test
+    public void encryptPwd() {
+        String result = stringEncryptor.encrypt("root");
+        System.out.println(result);
+    }
+
 
 
     @Test

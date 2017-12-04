@@ -1,16 +1,16 @@
 package com.junliang.spring;
 
-import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import io.undertow.Undertow.Builder;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.embedded.undertow.UndertowEmbeddedServletContainerFactory;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 import org.springframework.cloud.netflix.zuul.EnableZuulServer;
 import org.springframework.context.annotation.Bean;
-import org.springframework.web.client.RestTemplate;
 
+@EnableCaching
 @EnableZuulServer
 @EnableEurekaClient
 @EnableEurekaServer

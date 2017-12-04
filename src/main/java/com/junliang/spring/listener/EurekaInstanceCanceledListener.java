@@ -1,4 +1,4 @@
-package com.junliang.spring.config;
+package com.junliang.spring.listener;
 
 import com.junliang.spring.service.EmailService;
 import com.netflix.discovery.shared.Applications;

@@ -48,6 +48,10 @@ spring:
   thymeleaf:
     cache: false
     mode: LEGACYHTML5
+  cache:
+    ehcache:
+      config: ehcache.xml
+
 #actuator begin
 management:
   port: 54001

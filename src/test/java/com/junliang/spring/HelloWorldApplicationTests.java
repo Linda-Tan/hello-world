@@ -3,6 +3,8 @@ package com.junliang.spring;
 import com.junliang.spring.dao.mapper.UserMapper;
 import com.junliang.spring.dao.repository.UserRepository;
 import com.junliang.spring.pojo.entity.User;
+
+import org.jasypt.encryption.StringEncryptor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,13 @@ public class HelloWorldApplicationTests {
     public void contextLoads() {
     }
 
+    @Autowired(required=true)
+     private StringEncryptor stringEncryptor;//密码解码器自动注入
+
+    @Test
+    public void stringEncryptortest() {
+        System.out.println(stringEncryptor.encrypt("root"));
+    }
     @Test
     public void test() throws Exception {
         User user = new User();
