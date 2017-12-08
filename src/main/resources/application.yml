@@ -5,12 +5,12 @@ spring:
     read:
       url: jdbc:mysql://104.199.183.118:3306/hello-world?useUnicode=true&characterEncoding=utf8&useSSL=false
       username: root
-      password: root
+      password: ENC(uOgHOFIS5pNlk3t34+30lQ==)
       driver-class-name: com.mysql.jdbc.Driver
     write:
       url: jdbc:mysql://104.155.222.47:3306/hello-world?useUnicode=true&characterEncoding=utf8&useSSL=false
       username: root
-      password: root
+      password: ENC(EzRPyWLJQj3fIHklAW5LTA==)
       driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
 
@@ -39,7 +39,7 @@ spring:
     default-encoding: utf-8
     host: smtp.163.com
     username: li926893@163.com
-    password: li926893
+    password: ENC(Mkz5pYCkyH2BN2zB0d72kX4ln0PJIbRK)
     properties:
       mail:
         smtp:
