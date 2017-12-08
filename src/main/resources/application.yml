@@ -167,6 +167,6 @@ banner:
 
 myProps: #自定义的属性和值
   jwt:
-    rsa-public-key-file-path: D:\workspace\public.key
-    rsa-private-key-file-path: D:\workspace\private.key
+    rsa-public-key-file-path: key/public.key
+    rsa-private-key-file-path: key/private.key
     token-header: access-token

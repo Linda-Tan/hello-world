@@ -95,4 +95,13 @@ public class IOHelper {
             }
         }
     }
+
+    public static String getClassPath(String file){
+        URL classPath = Thread.currentThread().getContextClassLoader().getResource("");
+        String proFilePath = classPath.toString();
+        proFilePath = proFilePath.substring(6);
+        proFilePath= proFilePath+file;
+        proFilePath = proFilePath.replace("/", File.separator);
+        return proFilePath;
+    }
 }
