@@ -8,3 +8,6 @@ just a test!.
 #####判断文件是否存在
 if  (!file .exists()  && !file .isDirectory())
             file .mkdir();
+
+
+            啊实打实大大
