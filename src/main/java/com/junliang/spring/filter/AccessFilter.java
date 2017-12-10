@@ -61,7 +61,7 @@ public class AccessFilter extends ZuulFilter {
         }
         try {
             //校验token合法性
-            Jws<Claims> claimsJws = Jwts.parser().setSigningKey(RSAHelper.getPublicKey(pubKeyPath)).parseClaimsJws(token);
+            Jws<Claims> claimsJws = Jwts.parser().setSigningKey(RSAHelper.getBase64PublicKey(pubKeyPath)).parseClaimsJws(token);
             Claims body = claimsJws.getBody();
             UserInfo userInfo = new UserInfo();
             userInfo.setId(body.getId());

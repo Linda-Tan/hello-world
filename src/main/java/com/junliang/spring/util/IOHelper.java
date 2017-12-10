@@ -43,9 +43,10 @@ public class IOHelper {
 
         //文件保存位置
         File saveDir = new File(savePath);
-        if (!saveDir.exists()) {
+        if (!saveDir.exists()&& !saveDir .isDirectory()) {
             saveDir.mkdir();
         }
+
         File file = new File(saveDir + File.separator + fileName);
         FileOutputStream fos = new FileOutputStream(file);
         fos.write(getData);

@@ -49,6 +49,7 @@ public class voidTest {
             filename = filename.substring(0, filename.indexOf("-")) + ".jpg";
         }
         System.out.println(savePath);
+
         IOHelper.downLoadFromUrl(url, filename, savePath);
     }
 
