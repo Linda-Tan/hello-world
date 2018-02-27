@@ -18,19 +18,19 @@ import javax.mail.internet.MimeMessage;
 import javax.validation.Valid;
 import java.io.File;
 
+/**
+ *
+ * 支持自定义发件人昵称
+ * 支持扩展邮件Message
+ * 支持抄送／HTML／附件
+ * 支持异步发送
+ * 支持邮件模板
+ *
+ */
 @Slf4j
 @Service
 public class EmailService {
 
-    //TODO 2017/9/26 初步想法
-    /**
-     *
-     * 支持自定义发件人昵称
-     * 支持扩展邮件Message
-     * 支持抄送／HTML／附件
-     * 支持异步发送
-     * 支持邮件模板
-     */
 
 
     @Resource
@@ -45,6 +45,10 @@ public class EmailService {
     public String fromUser;//发送者
 
 
+    /**
+     * 发送邮件
+     * @param email
+     */
     public void send(@Valid Email email) {
         log.info("发送邮件：{}", email.getContent());
         SimpleMailMessage message = new SimpleMailMessage();
@@ -55,6 +59,10 @@ public class EmailService {
         mailSender.send(message);
     }
 
+    /**
+     * 发送邮件
+     * @param simpleMailMessage
+     */
     public void send(SimpleMailMessage simpleMailMessage) {
         Assert.notNull(simpleMailMessage, "simpleMailMessage must not be null");
         log.info("发送邮件：{}", simpleMailMessage.getText());
@@ -62,6 +70,11 @@ public class EmailService {
         mailSender.send(simpleMailMessage);
     }
 
+    /**
+     * 发送邮件
+     * @param mail
+     * @throws Exception
+     */
     public void sendBytemplate(Email mail) throws Exception {
         Assert.notNull(mail, "email must not be null");
         log.info("发送邮件：{}", mail.getContent());

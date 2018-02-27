@@ -38,8 +38,6 @@ public class MybatisConfig  extends MybatisAutoConfiguration {
     @Resource(name = "readDataSource")
     private DataSource readDataSource;
 
-    /*@Resource(name = "routingDataSource")
-    private DataSource routingDataSource;*/
 
 
     public MybatisConfig(MybatisProperties properties, ObjectProvider<Interceptor[]> interceptorsProvider, ResourceLoader resourceLoader, ObjectProvider<DatabaseIdProvider> databaseIdProvider, ObjectProvider<List<ConfigurationCustomizer>> configurationCustomizersProvider) {
@@ -47,7 +45,6 @@ public class MybatisConfig  extends MybatisAutoConfiguration {
     }
 
 
-    //TODO 2017/9/20 可配置多数据源
 
 
     @Bean
@@ -84,7 +81,6 @@ public class MybatisConfig  extends MybatisAutoConfiguration {
         return new DataSourceTransactionManager(roundRobinDataSouceProxy());
     }
 
-    //TODO 2017/9/19 配置多数数据源的事务管理
 
     //TODO 2017/9/20 druid 监控配置
     /**
