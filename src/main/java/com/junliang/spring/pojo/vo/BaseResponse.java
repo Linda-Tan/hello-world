@@ -1,11 +1,14 @@
 package com.junliang.spring.pojo.vo;
 
+
 import lombok.Data;
 
 @Data
 public class BaseResponse {
+
     Integer status;
     String message;
+
 
 
     public BaseResponse() {
