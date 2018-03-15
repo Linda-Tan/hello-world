@@ -18,7 +18,6 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
-
 	<properties>
 		<revision>1.0.0-SNAPSHOT</revision>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -293,6 +292,7 @@
 			</resource>
 		</resources>-->
 		<plugins>
+			<!-- 指定启动类 -->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -302,9 +302,8 @@
 					</mainClass>
 					<fork>true</fork>
 				</configuration>
-
-
 			</plugin>
+			<!-- maven 打包指定编译 -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -322,6 +321,7 @@
 					<skip>true</skip>
 				</configuration>
 			</plugin>
+			<!-- 打包排除生成目录 -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
