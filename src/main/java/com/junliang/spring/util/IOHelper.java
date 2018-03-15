@@ -6,7 +6,6 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.UUID;
 
 @Slf4j
@@ -28,6 +27,13 @@ public class IOHelper {
         return in2b;
     }
 
+    /**
+     * 下载网络文件
+     * @param urlStr 下载地址
+     * @param fileName 保存文件名
+     * @param savePath 保存路径
+     * @throws IOException
+     */
     public static void downLoadFromUrl(String urlStr, String fileName, String savePath) throws IOException {
         URL url = new URL(urlStr);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();

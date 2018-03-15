@@ -1,25 +1,19 @@
 package com.junliang.spring.interceptor;
 
+import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.executor.statement.StatementHandler;
+import org.apache.ibatis.mapping.BoundSql;
+import org.apache.ibatis.mapping.ParameterMapping;
+import org.apache.ibatis.plugin.*;
+import org.apache.ibatis.session.ResultHandler;
+import org.apache.ibatis.session.defaults.DefaultSqlSession.StrictMap;
+
 import java.lang.reflect.Field;
 import java.sql.Statement;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.ibatis.executor.statement.StatementHandler;
-import org.apache.ibatis.mapping.BoundSql;
-import org.apache.ibatis.mapping.ParameterMapping;
-import org.apache.ibatis.plugin.Interceptor;
-import org.apache.ibatis.plugin.Intercepts;
-import org.apache.ibatis.plugin.Invocation;
-import org.apache.ibatis.plugin.Plugin;
-import org.apache.ibatis.plugin.Signature;
-import org.apache.ibatis.session.ResultHandler;
-import org.apache.ibatis.session.defaults.DefaultSqlSession.StrictMap;
 
 /**
  * Sql执行时间记录拦截器

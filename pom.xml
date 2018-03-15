@@ -283,6 +283,7 @@
 	</dependencyManagement>
 
 	<build>
+		<finalName>helloworld</finalName>
 		<!--<resources>
 			<resource>
 				<directory>src/main/resources</directory>
