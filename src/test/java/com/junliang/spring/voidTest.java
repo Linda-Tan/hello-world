@@ -35,20 +35,21 @@ public class voidTest {
 
         RestTemplate restTemplate = new RestTemplate();
         JSONObject jsonObject = restTemplate.getForObject("https://cn.bing.com/HPImageArchive.aspx?format=js&n=1", JSONObject.class);
-
-        String url = "https://cn.bing.com" + jsonObject.getJSONArray("images").getJSONObject(0).getString("url");
+        String sourcePath =jsonObject.getJSONArray("images").getJSONObject(0).getString("url");
+        String url = "https://cn.bing.com" + sourcePath;
         //String usrHome = System.getProperty("user.home");
         String savePath = System.getProperty("user.home") + System.getProperty("file.separator") + "Pictures" + System.getProperty("file.separator") + "bing";
+        String filename =sourcePath.substring(sourcePath.lastIndexOf("/"));
         //System.out.println(savePath);
-        String filename = jsonObject.getJSONArray("images").getJSONObject(0).getString("fullstartdate");
-        try {
-
-            filename = filename.substring(0, filename.indexOf("，")) + ".jpg";
-        }catch (StringIndexOutOfBoundsException e){
-            e.printStackTrace();
-            filename = filename.substring(0, filename.indexOf("-")) + ".jpg";
-        }
-        System.out.println(savePath);
+        //String filename = jsonObject.getJSONArray("images").getJSONObject(0).getString("fullstartdate");
+        //try {
+        //
+        //    filename = filename + ".jpg";
+        //}catch (StringIndexOutOfBoundsException e){
+        //    e.printStackTrace();
+        //    filename = filename.substring(0, filename.indexOf("-")) + ".jpg";
+        //}
+        //System.out.println(savePath);
 
         IOHelper.downLoadFromUrl(url, filename, savePath);
     }

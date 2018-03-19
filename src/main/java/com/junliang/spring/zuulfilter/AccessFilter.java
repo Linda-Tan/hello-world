@@ -1,4 +1,4 @@
-package com.junliang.spring.filter;
+package com.junliang.spring.zuulfilter;
 
 import com.alibaba.fastjson.JSON;
 import com.junliang.spring.constant.ResponseCode;

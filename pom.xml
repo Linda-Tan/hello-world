@@ -294,6 +294,13 @@
                         com.junliang.spring.HelloWorldApplication
                     </mainClass>
                     <fork>true</fork>
+                    <layout>ZIP</layout>
+                    <includes>
+                        <include>
+                            <groupId>nothing</groupId>
+                            <artifactId>nothing</artifactId>
+                        </include>
+                    </includes>
                 </configuration>
             </plugin>
             <!-- maven 打包指定编译 -->
