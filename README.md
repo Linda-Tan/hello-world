@@ -10,4 +10,4 @@ if  (!file .exists()  && !file .isDirectory())
             file .mkdir();
 
 
-            啊实打实大大
+            java -cp D:/.m2/repository/org/jasypt/jasypt/1.9.2/jasypt-1.9.2.jar org.jasypt.intf.cli.JasyptPBEStringEncryptionCLI input="root" password=junliang algorithm=PBEWithMD5AndDES
