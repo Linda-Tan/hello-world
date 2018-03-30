@@ -1,7 +1,9 @@
 <config
         xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
         xmlns='http://www.ehcache.org/v3'
-        xmlns:jsr107='http://www.ehcache.org/v3/jsr107'>
+        xmlns:jsr107='http://www.ehcache.org/v3/jsr107'
+        xsi:schemaLocation="http://www.ehcache.org/v3 http://www.ehcache.org/schema/ehcache-core-3.5.xsd
+                        http://www.ehcache.org/v3/jsr107 http://www.ehcache.org/schema/ehcache-107-ext-3.5.xsd">
 
     <service>
         <jsr107:defaults>
@@ -9,10 +11,32 @@
         </jsr107:defaults>
     </service>
 
+    <thread-pools>
+    <thread-pool alias="defaultDiskPool" min-size="1" max-size="3"/>
+    </thread-pools>
+    <disk-store thread-pool="defaultDiskPool"></disk-store>
+            
+    <!-- 定义一个cache 实例配置 别名是 people
+     key 的类型为 string
+     最多允许2000 个 entries（可以理解为2000个key-value 对 ）
+     最多使用500m内存
+     -->
+    <cache alias="people">
+        <expiry>
+            <!--在缓存级别，再次使用预定义的生存时间。-->
+
+            <ttl unit="seconds">20</ttl>
+        </expiry>
+        <resources>
+            <heap unit="entries">2000</heap>
+            <offheap unit="MB">500</offheap>
+        </resources>
+    </cache>
+
     <cache-template name="heap-cache">
         <listeners>
             <listener>
-                <class>org.terracotta.ehcache.EventLogger</class>
+                <class>com.junliang.spring.listener.EhcacheEventLoggerListener</class>
                 <event-firing-mode>ASYNCHRONOUS</event-firing-mode>
                 <event-ordering-mode>UNORDERED</event-ordering-mode>
                 <events-to-fire-on>CREATED</events-to-fire-on>
@@ -24,7 +48,7 @@
         </listeners>
         <resources>
             <heap unit="entries">2000</heap>
-            <offheap unit="MB">100</offheap>
+            <offheap unit="MB">100</offheap> <!-- unit of measure is case sensitive! -->
         </resources>
     </cache-template>
 </config>

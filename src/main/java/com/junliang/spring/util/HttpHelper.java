@@ -3,21 +3,21 @@ package com.junliang.spring.util;
 import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
-import org.springframework.http.*;
-
 public class HttpHelper {
 
     public static HttpEntity<String> toJsonEntity(Object obj){
         HttpHeaders headers = new HttpHeaders();
-        MediaType type = MediaType.parseMediaType("application/json; charset=utf-8");
+        MediaType type = MediaType.APPLICATION_JSON_UTF8;
         headers.setContentType(type);
-        headers.add("Accept", MediaType.APPLICATION_JSON.toString());
+        headers.add("Accept", MediaType.APPLICATION_JSON_UTF8_VALUE);
 
         HttpEntity<String> formEntity = new HttpEntity<String>(JSON.toJSONString(obj), headers);
         return formEntity;
@@ -27,8 +27,9 @@ public class HttpHelper {
     public static HttpEntity<String> toUrlEncodedEntity(Map<String, String> paraMap){
 
         HttpHeaders headers = new HttpHeaders();
-        MediaType type = MediaType.parseMediaType("application/x-www-form-urlencoded; charset=utf-8");
+        MediaType type = MediaType.APPLICATION_FORM_URLENCODED;
         headers.setContentType(type);
+        headers.add("Accept", MediaType.APPLICATION_FORM_URLENCODED_VALUE);
         HttpEntity<String> formEntity = new HttpEntity<String>(formatUrlMap(paraMap, false, false), headers);
 
         return  formEntity;

@@ -40,7 +40,9 @@
         <nekohtml.version>1.9.22</nekohtml.version>
 
         <jasypt.version>1.16</jasypt.version>
-        <ehcache.version>3.4.0</ehcache.version>
+        <ehcache.version>3.5.2</ehcache.version>
+
+        <target.dir>D:\${revision}</target.dir>
     </properties>
 
     <dependencies>
@@ -282,7 +284,7 @@
     </dependencyManagement>
 
     <build>
-        <finalName>helloworld</finalName>
+        <finalName>${project.artifactId}</finalName>
 
         <plugins>
             <!-- 指定启动类 -->
@@ -391,6 +393,27 @@
                         <version>3.4.0</version>
                     </dependency>
                 </dependencies>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <mkdir dir="${target.dir}"/>
+                                <copy todir="${target.dir}" overwrite="true" >
+                                    <fileset dir="${project.build.directory}" erroronmissingdir="false">
+                                        <include name="*.jar"/>
+                                    </fileset>
+                                </copy>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
         <resources>
