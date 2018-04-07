@@ -5,4 +5,6 @@ import com.junliang.spring.remote.FeignClient;
 public class FeignClientHystrix implements FeignClient {
 
 
+
+
 }

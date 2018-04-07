@@ -284,26 +284,70 @@
     </dependencyManagement>
 
     <build>
-        <finalName>${project.artifactId}</finalName>
+        <finalName>${artifactId}</finalName>
 
         <plugins>
-            <!-- 指定启动类 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${target.dir}/lib</outputDirectory>
+                            <excludeTransitive>false</excludeTransitive>
+                            <stripVersion>false</stripVersion>
+                            <includeScope>runtime</includeScope>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>
-                        com.junliang.spring.HelloWorldApplication
-                    </mainClass>
-                    <fork>true</fork>
-                    <!--<layout>ZIP</layout>-->
-                    <!--<includes>-->
-                        <!--<include>-->
-                            <!--<groupId>nothing</groupId>-->
-                            <!--<artifactId>nothing</artifactId>-->
-                        <!--</include>-->
-                    <!--</includes>-->
+                    <!-- 指定启动类 -->
+                    <mainClass>com.example.demo.DemoApplication</mainClass>
+                    <layout>ZIP</layout>
+                    <includes>
+                        <include>
+                            <groupId>nothing</groupId>
+                            <artifactId>nothing</artifactId>
+                        </include>
+                    </includes>
                 </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <mkdir dir="${target.dir}"/>
+                                <copy todir="${target.dir}" overwrite="true" >
+                                    <fileset dir="${project.build.directory}" erroronmissingdir="false">
+                                        <include name="*.jar"/>
+                                    </fileset>
+                                </copy>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <!-- maven 打包指定编译 -->
             <plugin>
@@ -393,27 +437,6 @@
                         <version>3.4.0</version>
                     </dependency>
                 </dependencies>
-            </plugin>
-            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <tasks>
-                                <mkdir dir="${target.dir}"/>
-                                <copy todir="${target.dir}" overwrite="true" >
-                                    <fileset dir="${project.build.directory}" erroronmissingdir="false">
-                                        <include name="*.jar"/>
-                                    </fileset>
-                                </copy>
-                            </tasks>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
         <resources>

@@ -39,12 +39,9 @@ public class MybatisConfig  extends MybatisAutoConfiguration {
     private DataSource readDataSource;
 
 
-
     public MybatisConfig(MybatisProperties properties, ObjectProvider<Interceptor[]> interceptorsProvider, ResourceLoader resourceLoader, ObjectProvider<DatabaseIdProvider> databaseIdProvider, ObjectProvider<List<ConfigurationCustomizer>> configurationCustomizersProvider) {
         super(properties, interceptorsProvider, resourceLoader, databaseIdProvider, configurationCustomizersProvider);
     }
-
-
 
 
     @Bean
