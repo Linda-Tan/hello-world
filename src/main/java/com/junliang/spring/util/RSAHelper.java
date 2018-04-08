@@ -1,6 +1,8 @@
 package com.junliang.spring.util;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
 import java.io.*;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
@@ -12,6 +14,22 @@ import java.util.Map;
 
 
 public class RSAHelper {
+
+    public static final String KEY_ALGORITHM = "RSA";
+
+    /**
+     * MD5摘要算法和RSA创建并验证PKCS＃1中定义的RSA数字签名
+     * SHA1withRSA
+     * SHA224withRSA
+     * SHA256withRSA
+     * SHA384withRSA
+     * SHA512withRSA
+     */
+    private final static String RSA_SIGNATURE = "MD5withRSA";
+
+    private final static String RSA_CIPHER = "RSA";
+
+    public static final int KEY_SIZE = 2048;
 
     /**
      * 获取公钥
@@ -29,7 +47,7 @@ public class RSAHelper {
         dis.readFully(keyBytes);
         dis.close();
         X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
-        KeyFactory kf = KeyFactory.getInstance("RSA");
+        KeyFactory kf = KeyFactory.getInstance(RSA_CIPHER);
         return kf.generatePublic(spec);
     }
 
@@ -38,7 +56,7 @@ public class RSAHelper {
             throws InvalidKeySpecException, NoSuchAlgorithmException, IOException {
         byte[] keyBytes = Base64.getDecoder().decode(IOHelper.readFile(filepath));
         X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
-        KeyFactory kf = KeyFactory.getInstance("RSA");
+        KeyFactory kf = KeyFactory.getInstance(RSA_CIPHER);
         return kf.generatePublic(spec);
     }
 
@@ -57,7 +75,7 @@ public class RSAHelper {
         dis.readFully(keyBytes);
         dis.close();
         PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
-        KeyFactory kf = KeyFactory.getInstance("RSA");
+        KeyFactory kf = KeyFactory.getInstance(RSA_CIPHER);
         return kf.generatePrivate(spec);
     }
 
@@ -66,7 +84,7 @@ public class RSAHelper {
             throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
         byte[] keyBytes = Base64.getDecoder().decode(IOHelper.readFile(filepath));
         PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
-        KeyFactory kf = KeyFactory.getInstance("RSA");
+        KeyFactory kf = KeyFactory.getInstance(RSA_CIPHER);
         return kf.generatePrivate(spec);
     }
 
@@ -81,9 +99,9 @@ public class RSAHelper {
      */
     public static Map<String, byte[]> generateByteKey(String publicKeyFilename, String privateKeyFilename, String password)
             throws IOException, NoSuchAlgorithmException {
-        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(KEY_ALGORITHM);
         SecureRandom secureRandom = new SecureRandom(password.getBytes());
-        keyPairGenerator.initialize(1024, secureRandom);
+        keyPairGenerator.initialize(KEY_SIZE, secureRandom);
         KeyPair keyPair = keyPairGenerator.genKeyPair();
         byte[] publicKeyBytes = keyPair.getPublic().getEncoded();
         FileOutputStream fos = new FileOutputStream(publicKeyFilename);
@@ -113,9 +131,9 @@ public class RSAHelper {
     @Deprecated
     public static void generateBase64Key(String publicKeyFilename, String privateKeyFilename, String password)
             throws IOException, NoSuchAlgorithmException {
-        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(KEY_ALGORITHM);
         SecureRandom secureRandom = new SecureRandom(password.getBytes());
-        keyPairGenerator.initialize(1024, secureRandom);
+        keyPairGenerator.initialize(KEY_SIZE, secureRandom);
         KeyPair keyPair = keyPairGenerator.genKeyPair();
         byte[] publicKeyBytes = keyPair.getPublic().getEncoded();
         String stringPubKey = Base64.getEncoder().encodeToString(publicKeyBytes);
@@ -129,6 +147,28 @@ public class RSAHelper {
         osw.close();
     }
 
+    /**
+     * 分段加密
+     *
+     * @param ciphertext  密文
+     * @param key         加密秘钥
+     * @param segmentSize 分段大小，<=0 不分段
+     * @return
+     */
+    public static String encrypt(String ciphertext, Key key, int segmentSize) throws Exception {
+        // 用公钥加密
+        byte[] srcBytes = ciphertext.getBytes();
+
+        // Cipher负责完成加密或解密工作，基于RSA
+        Cipher cipher = Cipher.getInstance(RSA_CIPHER);
+        // 根据公钥，对Cipher对象进行初始化
+        cipher.init(Cipher.ENCRYPT_MODE, key);
+        byte[] resultBytes = null;
+        resultBytes = cipherDoFinal(cipher, srcBytes, segmentSize);
+
+        return Base64.getEncoder().encodeToString(resultBytes);
+
+    }
 
     /**
      * 加密 rsa core
@@ -156,12 +196,35 @@ public class RSAHelper {
      */
     public static byte[] encrypt(byte[] data, Key key)
             throws Exception {
-        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         // 对数据加密
-        Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());
+        Cipher cipher = Cipher.getInstance(RSA_CIPHER);
         cipher.init(Cipher.ENCRYPT_MODE, key);
         return cipher.doFinal(data);
     }
+
+    /**
+     * 分段解密
+     *
+     * @param contentBase64 密文
+     * @param key           解密秘钥
+     * @param segmentSize   分段大小（小于等于0不分段）
+     * @return
+     */
+    public static String decrypt(String contentBase64, Key key, int segmentSize) throws Exception {
+        // 用私钥解密
+        byte[] srcBytes = Base64.getDecoder().decode(contentBase64);
+        // Cipher负责完成加密或解密工作，基于RSA
+        Cipher cipher = Cipher.getInstance(RSA_CIPHER);
+        // 根据公钥，对Cipher对象进行初始化
+        cipher.init(Cipher.DECRYPT_MODE, key);
+
+        //deCipher.doFinal(srcBytes);
+        byte[] decBytes = null;
+
+        decBytes = cipherDoFinal(cipher, srcBytes, segmentSize);
+        return new String(decBytes, "UTF8");
+    }
+
 
     /**
      * 解密 rsa core
@@ -189,12 +252,50 @@ public class RSAHelper {
      */
     public static byte[] decrypt(byte[] data, Key key)
             throws Exception {
-        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         // 对数据解密
-        Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());
+        Cipher cipher = Cipher.getInstance(RSA_CIPHER);
         cipher.init(Cipher.DECRYPT_MODE, key);
         return cipher.doFinal(data);
     }
+
+
+    /**
+     * 分段大小
+     *
+     * @param cipher
+     * @param srcBytes
+     * @param segmentSize
+     * @return
+     * @throws IllegalBlockSizeException
+     * @throws BadPaddingException
+     * @throws IOException
+     */
+    private static byte[] cipherDoFinal(Cipher cipher, byte[] srcBytes, int segmentSize)
+            throws IllegalBlockSizeException, BadPaddingException, IOException {
+        if (segmentSize <= 0) {
+            throw new RuntimeException("分段大小必须大于0");
+        }
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        int inputLen = srcBytes.length;
+        int offSet = 0;
+        byte[] cache;
+        int i = 0;
+        // 对数据分段解密
+        while (inputLen - offSet > 0) {
+            if (inputLen - offSet > segmentSize) {
+                cache = cipher.doFinal(srcBytes, offSet, segmentSize);
+            } else {
+                cache = cipher.doFinal(srcBytes, offSet, inputLen - offSet);
+            }
+            out.write(cache, 0, cache.length);
+            i++;
+            offSet = i * segmentSize;
+        }
+        byte[] data = out.toByteArray();
+        out.close();
+        return data;
+    }
+
 
     /**
      * 用私钥对信息生成数字签名
@@ -208,7 +309,7 @@ public class RSAHelper {
     public static String sign(String data, PrivateKey privateKey) throws Exception {
         byte[] decode = Base64.getDecoder().decode(data);
         // 用私钥对信息生成数字签名
-        Signature signature = Signature.getInstance("MD5withRSA");
+        Signature signature = Signature.getInstance(RSA_SIGNATURE);
         signature.initSign(privateKey);
         signature.update(decode);
 
@@ -227,7 +328,7 @@ public class RSAHelper {
     public static boolean verify(String data, PublicKey publicKey, String sign)
             throws Exception {
         byte[] dData = Base64.getDecoder().decode(data);
-        Signature signature = Signature.getInstance("MD5withRSA");
+        Signature signature = Signature.getInstance(RSA_SIGNATURE);
         signature.initVerify(publicKey);
         signature.update(dData);
 
@@ -236,25 +337,4 @@ public class RSAHelper {
         return signature.verify(decode);
     }
 
-    public static void main(String[] args) throws Exception {
-        //公钥文件路径
-        String publicKeyFilePath = "D:\\workspace\\public.key";
-        //私钥文件路径
-        String privateKeyFilePath = "D:\\workspace\\private.key";
-        //对rsa进行base64编码后写入文件，文件夹不存在抛异常。
-        generateBase64Key(publicKeyFilePath,privateKeyFilePath,"password");
-        PrivateKey privateKey = getBase64PrivateKey(privateKeyFilePath);
-        PublicKey publicKey = getBase64PublicKey(publicKeyFilePath);
-        //generateByteKey(publicKeyFilePath,privateKeyFilePath,"password");
-        //PrivateKey privateKey = getPrivateKey(privateKeyFilePath);
-        //PublicKey publicKey = getPublicKey(publicKeyFilePath);
-        String encrypt = encrypt("data", privateKey);
-        System.out.println("加密后："+encrypt);
-        String decrypt = decrypt(encrypt, publicKey);
-        System.out.println("解密后："+decrypt);
-        String sign = sign(encrypt, privateKey);
-        System.out.println(sign);
-        boolean verify = verify(encrypt, publicKey, sign);
-        System.out.println(verify);
-    }
 }
