@@ -41,15 +41,7 @@ public class voidTest {
         //String usrHome = System.getProperty("user.home");
         String savePath = System.getProperty("user.home") + File.separator+ "Pictures" +File.separator + "bing";
         String filename =sourcePath.substring(sourcePath.lastIndexOf("/"));
-        //System.out.println(savePath);
-        //String filename = jsonObject.getJSONArray("images").getJSONObject(0).getString("fullstartdate");
-        //try {
-        //
-        //    filename = filename + ".jpg";
-        //}catch (StringIndexOutOfBoundsException e){
-        //    e.printStackTrace();
-        //    filename = filename.substring(0, filename.indexOf("-")) + ".jpg";
-        //}
+
         System.out.println(savePath);
 
         IOHelper.downLoadFromUrl(url, filename, savePath);
