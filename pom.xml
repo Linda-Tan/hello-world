@@ -317,7 +317,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <!-- 指定启动类 -->
-                    <mainClass>com.example.demo.DemoApplication</mainClass>
+                    <mainClass>com.junliang.spring.HelloWorldApplication</mainClass>
                     <layout>ZIP</layout>
                     <includes>
                         <include>
