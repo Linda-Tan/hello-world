@@ -1,5 +1,7 @@
 package com.junliang.spring.util;
 
+import org.apache.commons.lang3.StringUtils;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -32,6 +34,21 @@ public class RSAHelper {
     public static final int KEY_SIZE = 2048;
 
     /**
+     * 解密时必须按照此分组解密
+     */
+    public static int decodeLen = KEY_SIZE / 8;
+    /**
+     * 加密时小于117即可
+     */
+    public static int encodeLen = (KEY_SIZE / 8) - 11;
+
+    public static PublicKey getPublicKey(byte[] keyBytes) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
+        KeyFactory kf = KeyFactory.getInstance(RSA_CIPHER);
+        return kf.generatePublic(spec);
+    }
+
+    /**
      * 获取公钥
      *
      * @param filename
@@ -46,27 +63,52 @@ public class RSAHelper {
         byte[] keyBytes = new byte[(int) f.length()];
         dis.readFully(keyBytes);
         dis.close();
-        X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
-        KeyFactory kf = KeyFactory.getInstance(RSA_CIPHER);
-        return kf.generatePublic(spec);
+        return getPublicKey(keyBytes);
     }
 
     @Deprecated
     public static PublicKey getBase64PublicKey(String filepath)
             throws InvalidKeySpecException, NoSuchAlgorithmException, IOException {
         byte[] keyBytes = Base64.getDecoder().decode(IOHelper.readFile(filepath));
-        X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
-        KeyFactory kf = KeyFactory.getInstance(RSA_CIPHER);
-        return kf.generatePublic(spec);
+        return getPublicKey(keyBytes);
     }
+
+
+    public static PublicKey getPemPublicKey(String contentBase64) throws InvalidKeySpecException, NoSuchAlgorithmException {
+        String publicKeyPEM = contentBase64.replace("-----BEGIN PUBLIC KEY-----", "");
+        publicKeyPEM = publicKeyPEM.replace("-----END PUBLIC KEY-----", "");
+        publicKeyPEM = publicKeyPEM.replace(StringUtils.LF, "").replace(StringUtils.CR, "").replace(" ", "").trim();
+        byte[] decoded = Base64.getDecoder().decode(publicKeyPEM);
+        return getPublicKey(decoded);
+    }
+
 
     /**
      * 获取私钥
-     *
-     * @param filename
+      * @param keyBytes
      * @return
-     * @throws Exception
+     * @throws NoSuchAlgorithmException
+     * @throws InvalidKeySpecException
      */
+
+    public static PrivateKey getPrivateKey(byte[] keyBytes) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
+        KeyFactory kf = KeyFactory.getInstance(RSA_CIPHER);
+        return kf.generatePrivate(spec);
+    }
+
+
+    public static PrivateKey getPemPrivateKey(String contentBase64) throws InvalidKeySpecException, NoSuchAlgorithmException {
+
+        String privKeyPEM = contentBase64.replace("-----BEGIN PRIVATE KEY-----", "");
+        privKeyPEM = privKeyPEM.replace("-----END PRIVATE KEY-----", "");
+
+        privKeyPEM = privKeyPEM.replace(StringUtils.LF, "").replace(StringUtils.CR, "").replace(" ", "").trim();
+
+        byte[] decoded = Base64.getDecoder().decode(privKeyPEM);
+        return getPrivateKey(decoded);
+    }
+
     public static PrivateKey getPrivateKey(String filename)
             throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         File f = new File(filename);
@@ -74,18 +116,14 @@ public class RSAHelper {
         byte[] keyBytes = new byte[(int) f.length()];
         dis.readFully(keyBytes);
         dis.close();
-        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
-        KeyFactory kf = KeyFactory.getInstance(RSA_CIPHER);
-        return kf.generatePrivate(spec);
+        return getPrivateKey(keyBytes);
     }
 
     @Deprecated
     public static PrivateKey getBase64PrivateKey(String filepath)
             throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
         byte[] keyBytes = Base64.getDecoder().decode(IOHelper.readFile(filepath));
-        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
-        KeyFactory kf = KeyFactory.getInstance(RSA_CIPHER);
-        return kf.generatePrivate(spec);
+        return getPrivateKey(keyBytes);
     }
 
     /**
@@ -167,7 +205,6 @@ public class RSAHelper {
         resultBytes = cipherDoFinal(cipher, srcBytes, segmentSize);
 
         return Base64.getEncoder().encodeToString(resultBytes);
-
     }
 
     /**
@@ -218,13 +255,9 @@ public class RSAHelper {
         // 根据公钥，对Cipher对象进行初始化
         cipher.init(Cipher.DECRYPT_MODE, key);
 
-        //deCipher.doFinal(srcBytes);
-        byte[] decBytes = null;
-
-        decBytes = cipherDoFinal(cipher, srcBytes, segmentSize);
+        byte[] decBytes = cipherDoFinal(cipher, srcBytes, segmentSize);
         return new String(decBytes, "UTF8");
     }
-
 
     /**
      * 解密 rsa core
@@ -296,7 +329,6 @@ public class RSAHelper {
         return data;
     }
 
-
     /**
      * 用私钥对信息生成数字签名
      *
@@ -307,11 +339,10 @@ public class RSAHelper {
      * @throws Exception
      */
     public static String sign(String data, PrivateKey privateKey) throws Exception {
-        byte[] decode = Base64.getDecoder().decode(data);
         // 用私钥对信息生成数字签名
         Signature signature = Signature.getInstance(RSA_SIGNATURE);
         signature.initSign(privateKey);
-        signature.update(decode);
+        signature.update(data.getBytes());
 
         return Base64.getEncoder().encodeToString(signature.sign());
     }
@@ -327,10 +358,9 @@ public class RSAHelper {
      */
     public static boolean verify(String data, PublicKey publicKey, String sign)
             throws Exception {
-        byte[] dData = Base64.getDecoder().decode(data);
         Signature signature = Signature.getInstance(RSA_SIGNATURE);
         signature.initVerify(publicKey);
-        signature.update(dData);
+        signature.update(data.getBytes());
 
         byte[] decode = Base64.getDecoder().decode(sign);
         // 验证签名是否正常
