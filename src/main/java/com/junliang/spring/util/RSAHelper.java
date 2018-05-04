@@ -1,10 +1,10 @@
 package com.junliang.spring.util;
 
-import org.apache.commons.lang3.StringUtils;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.io.*;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
@@ -15,9 +15,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+/**
+ * @author Tony
+ */
 public class RSAHelper {
 
-    public static final String KEY_ALGORITHM = "RSA";
+    public static final String PRI_KEY_NAME="RSAPrivateKey";
+
+    public static final String PUB_KEY_NAME="RSAPublicKey";
+
+    public static final String LF = "\n";
+
+    public static final String CR = "\r";
+
+    public static final String SPACE = " ";
+
+    public static final String EMPTY = "";
 
     /**
      * MD5摘要算法和RSA创建并验证PKCS＃1中定义的RSA数字签名
@@ -41,6 +54,93 @@ public class RSAHelper {
      * 加密时小于117即可
      */
     public static int encodeLen = (KEY_SIZE / 8) - 11;
+
+    private static Cipher CIPHER;
+
+    static {
+        try {
+            CIPHER = Cipher.getInstance(RSA_CIPHER);
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+            //初始化 失败
+            CIPHER = null;
+        }
+    }
+
+    /**
+     * 加密
+     * @param key
+     * @param raw
+     * @return
+     * @throws Exception
+     */
+    public static String encrypt(Key key, String raw) throws Exception {
+        // Cipher负责完成加密或解密工作，基于RSA
+        Cipher cipher = CIPHER != null ? CIPHER : Cipher.getInstance(RSA_CIPHER);
+        Base64.Encoder encoder = Base64.getEncoder();
+        cipher.init(Cipher.ENCRYPT_MODE, key);
+
+        byte[] data = raw.getBytes();
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        // 对数据分段加密
+        cipherSection(cipher, data, out, encodeLen);
+        byte[] encryptedData = out.toByteArray();
+        out.close();
+
+        return encoder.encodeToString(encryptedData);
+    }
+
+    /**
+     * 解密
+     * @param key
+     * @param text
+     * @return
+     * @throws Exception
+     */
+    public static String decrypt(Key key, String text) throws Exception {
+        // Cipher负责完成加密或解密工作，基于RSA
+        Cipher cipher = CIPHER != null ? CIPHER : Cipher.getInstance(RSA_CIPHER);
+        Base64.Decoder decoder = Base64.getDecoder();
+        cipher.init(Cipher.DECRYPT_MODE, key);
+
+        byte[] encryptedData =decoder.decode(text);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        // 对数据分段解密
+        cipherSection(cipher, encryptedData, out, decodeLen);
+        byte[] decryptedData = out.toByteArray();
+        out.close();
+        return new String(decryptedData);
+    }
+
+    /**
+     *  密文 分段 处理
+     * @param cipher  处理工具
+     * @param data  数据源
+     * @param out 分段数据流
+     * @param decodeLen 分段大小
+     * @throws IllegalBlockSizeException
+     * @throws BadPaddingException
+     */
+    private static void cipherSection(Cipher cipher, byte[] data, ByteArrayOutputStream out, int decodeLen) throws IllegalBlockSizeException, BadPaddingException {
+        int inputLen = data.length;
+        int offSet = 0;
+        int i = 0;
+        byte[] cache;
+        while (inputLen - offSet > 0) {
+            if (inputLen - offSet > decodeLen) {
+                cache = cipher.doFinal(data, offSet, decodeLen);
+            } else {
+                cache = cipher.doFinal(data, offSet, inputLen - offSet);
+            }
+            out.write(cache, 0, cache.length);
+            i++;
+            offSet = i * decodeLen;
+        }
+    }
+
 
     public static PublicKey getPublicKey(byte[] keyBytes) throws NoSuchAlgorithmException, InvalidKeySpecException {
         X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
@@ -75,9 +175,9 @@ public class RSAHelper {
 
 
     public static PublicKey getPemPublicKey(String contentBase64) throws InvalidKeySpecException, NoSuchAlgorithmException {
-        String publicKeyPEM = contentBase64.replace("-----BEGIN PUBLIC KEY-----", "");
-        publicKeyPEM = publicKeyPEM.replace("-----END PUBLIC KEY-----", "");
-        publicKeyPEM = publicKeyPEM.replace(StringUtils.LF, "").replace(StringUtils.CR, "").replace(" ", "").trim();
+        String publicKeyPEM = contentBase64.replace("-----BEGIN PUBLIC KEY-----", EMPTY);
+        publicKeyPEM = publicKeyPEM.replace("-----END PUBLIC KEY-----", EMPTY);
+        publicKeyPEM = publicKeyPEM.replace(LF, EMPTY).replace(CR, EMPTY).replace(SPACE, EMPTY).trim();
         byte[] decoded = Base64.getDecoder().decode(publicKeyPEM);
         return getPublicKey(decoded);
     }
@@ -100,10 +200,10 @@ public class RSAHelper {
 
     public static PrivateKey getPemPrivateKey(String contentBase64) throws InvalidKeySpecException, NoSuchAlgorithmException {
 
-        String privKeyPEM = contentBase64.replace("-----BEGIN PRIVATE KEY-----", "");
-        privKeyPEM = privKeyPEM.replace("-----END PRIVATE KEY-----", "");
+        String privKeyPEM = contentBase64.replace("-----BEGIN PRIVATE KEY-----", EMPTY);
+        privKeyPEM = privKeyPEM.replace("-----END PRIVATE KEY-----", EMPTY);
 
-        privKeyPEM = privKeyPEM.replace(StringUtils.LF, "").replace(StringUtils.CR, "").replace(" ", "").trim();
+        privKeyPEM = privKeyPEM.replace(LF, EMPTY).replace(CR, EMPTY).replace(SPACE, EMPTY).trim();
 
         byte[] decoded = Base64.getDecoder().decode(privKeyPEM);
         return getPrivateKey(decoded);
@@ -137,7 +237,7 @@ public class RSAHelper {
      */
     public static Map<String, byte[]> generateByteKey(String publicKeyFilename, String privateKeyFilename, String password)
             throws IOException, NoSuchAlgorithmException {
-        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(KEY_ALGORITHM);
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(RSA_CIPHER);
         SecureRandom secureRandom = new SecureRandom(password.getBytes());
         keyPairGenerator.initialize(KEY_SIZE, secureRandom);
         KeyPair keyPair = keyPairGenerator.genKeyPair();
@@ -151,8 +251,8 @@ public class RSAHelper {
         fos.close();
 
         HashMap<String, byte[]> keyMap = new HashMap<>(2);
-        keyMap.put("publicKey", publicKeyBytes);
-        keyMap.put("privateKey", privateKeyBytes);
+        keyMap.put(PUB_KEY_NAME, publicKeyBytes);
+        keyMap.put(PRI_KEY_NAME, privateKeyBytes);
         return keyMap;
     }
 
@@ -167,9 +267,9 @@ public class RSAHelper {
      * @deprecated 对rsa进行base64编码后写入文件，文件夹不存在抛异常。
      */
     @Deprecated
-    public static void generateBase64Key(String publicKeyFilename, String privateKeyFilename, String password)
+    public static Map<String, String> generateBase64Key(String publicKeyFilename, String privateKeyFilename, String password)
             throws IOException, NoSuchAlgorithmException {
-        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(KEY_ALGORITHM);
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(RSA_CIPHER);
         SecureRandom secureRandom = new SecureRandom(password.getBytes());
         keyPairGenerator.initialize(KEY_SIZE, secureRandom);
         KeyPair keyPair = keyPairGenerator.genKeyPair();
@@ -183,151 +283,14 @@ public class RSAHelper {
         osw = new OutputStreamWriter(new FileOutputStream(privateKeyFilename));
         osw.write(stringPriKey);
         osw.close();
-    }
 
-    /**
-     * 分段加密
-     *
-     * @param ciphertext  密文
-     * @param key         加密秘钥
-     * @param segmentSize 分段大小，<=0 不分段
-     * @return
-     */
-    public static String encrypt(String ciphertext, Key key, int segmentSize) throws Exception {
-        // 用公钥加密
-        byte[] srcBytes = ciphertext.getBytes();
-
-        // Cipher负责完成加密或解密工作，基于RSA
-        Cipher cipher = Cipher.getInstance(RSA_CIPHER);
-        // 根据公钥，对Cipher对象进行初始化
-        cipher.init(Cipher.ENCRYPT_MODE, key);
-        byte[] resultBytes = null;
-        resultBytes = cipherDoFinal(cipher, srcBytes, segmentSize);
-
-        return Base64.getEncoder().encodeToString(resultBytes);
-    }
-
-    /**
-     * 加密 rsa core
-     *
-     * @param data
-     * @param key
-     * @return base64 encode
-     * @throws Exception
-     */
-    public static String encrypt(String data, Key key)
-            throws Exception {
-        byte[] doFinalData = encrypt(data.getBytes("UTF8"), key);
-
-        return Base64.getEncoder().encodeToString(doFinalData);
-
-    }
-
-    /**
-     * 加密 rsa core
-     *
-     * @param data
-     * @param key
-     * @return
-     * @throws Exception
-     */
-    public static byte[] encrypt(byte[] data, Key key)
-            throws Exception {
-        // 对数据加密
-        Cipher cipher = Cipher.getInstance(RSA_CIPHER);
-        cipher.init(Cipher.ENCRYPT_MODE, key);
-        return cipher.doFinal(data);
-    }
-
-    /**
-     * 分段解密
-     *
-     * @param contentBase64 密文
-     * @param key           解密秘钥
-     * @param segmentSize   分段大小（小于等于0不分段）
-     * @return
-     */
-    public static String decrypt(String contentBase64, Key key, int segmentSize) throws Exception {
-        // 用私钥解密
-        byte[] srcBytes = Base64.getDecoder().decode(contentBase64);
-        // Cipher负责完成加密或解密工作，基于RSA
-        Cipher cipher = Cipher.getInstance(RSA_CIPHER);
-        // 根据公钥，对Cipher对象进行初始化
-        cipher.init(Cipher.DECRYPT_MODE, key);
-
-        byte[] decBytes = cipherDoFinal(cipher, srcBytes, segmentSize);
-        return new String(decBytes, "UTF8");
-    }
-
-    /**
-     * 解密 rsa core
-     *
-     * @param data
-     * @param key
-     * @return
-     * @throws Exception
-     */
-    public static String decrypt(String data, Key key)
-            throws Exception {
-        //Base64 解码
-        byte[] decodeData = Base64.getDecoder().decode(data);
-        byte[] doFinalData = decrypt(decodeData, key);
-        return new String(doFinalData, "UTF8");
-    }
-
-    /**
-     * 解密 rsa core
-     *
-     * @param data
-     * @param key
-     * @return
-     * @throws Exception
-     */
-    public static byte[] decrypt(byte[] data, Key key)
-            throws Exception {
-        // 对数据解密
-        Cipher cipher = Cipher.getInstance(RSA_CIPHER);
-        cipher.init(Cipher.DECRYPT_MODE, key);
-        return cipher.doFinal(data);
+        Map<String, String> keymap = new HashMap<>(2);
+        keymap.put(PRI_KEY_NAME, stringPriKey);
+        keymap.put(PUB_KEY_NAME, stringPubKey);
+        return keymap;
     }
 
 
-    /**
-     * 分段大小
-     *
-     * @param cipher
-     * @param srcBytes
-     * @param segmentSize
-     * @return
-     * @throws IllegalBlockSizeException
-     * @throws BadPaddingException
-     * @throws IOException
-     */
-    private static byte[] cipherDoFinal(Cipher cipher, byte[] srcBytes, int segmentSize)
-            throws IllegalBlockSizeException, BadPaddingException, IOException {
-        if (segmentSize <= 0) {
-            throw new RuntimeException("分段大小必须大于0");
-        }
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        int inputLen = srcBytes.length;
-        int offSet = 0;
-        byte[] cache;
-        int i = 0;
-        // 对数据分段解密
-        while (inputLen - offSet > 0) {
-            if (inputLen - offSet > segmentSize) {
-                cache = cipher.doFinal(srcBytes, offSet, segmentSize);
-            } else {
-                cache = cipher.doFinal(srcBytes, offSet, inputLen - offSet);
-            }
-            out.write(cache, 0, cache.length);
-            i++;
-            offSet = i * segmentSize;
-        }
-        byte[] data = out.toByteArray();
-        out.close();
-        return data;
-    }
 
     /**
      * 用私钥对信息生成数字签名
