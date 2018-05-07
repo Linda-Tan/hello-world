@@ -1,6 +1,7 @@
 package com.junliang.spring;
 
 import com.alibaba.fastjson.JSONObject;
+import com.junliang.spring.util.Base64;
 import com.junliang.spring.util.IOHelper;
 import org.jasypt.encryption.StringEncryptor;
 import org.junit.Test;
@@ -9,6 +10,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 public class voidTest {
 
@@ -24,9 +26,13 @@ public class voidTest {
 
 
     @Test
-    public void jsonCan() {
-        String json = "{  \"listOfCreditCardsForCustomerUsingCardNoAsInputInqRs\":{    \"listRs\":{      \"nextStartIndex\":\"0000\",      \"moreIndicator\":\"N\",      \"size\":3    },    \"creditCardInfo\":[      {        \"cardNo\":\"6250771000582957\",        \"accountOrgCode\":\"822\",        \"accountLogo\":\"110\",        \"accountNo\":\"0006250771000582957\",        \"customerNo\":\"0006250771000582957\",        \"cardSequenceNo\":1,        \"customerOrgCode\":\"822\",        \"relationshipOrgCode\":\"822\",        \"relationshipNo\":\"0006250771000582957\",        \"nfcEnrolled\":null,        \"nfcAssociatedCardNo\":null,        \"accountStatusCode\":null,        \"cardExpiryDate\":\"2022-03-31\",        \"cardStatusCode\":\"0\",        \"cardholderName\":null,        \"primaryCardNo\":\"0006250771000582957\",        \"primarySupplementaryIndicator\":\"P\",        \"cardholderRMCustomerNo\":\"410039477\",        \"cardToAddressSequenceNo\":1,        \"cardReplacementFee\":0.0E0,        \"highestBlockCode\":\"Y\",        \"cardActivationIndicator\":\"Y\",        \"accountBlockCode1\":null,        \"accountBlockCode2\":null,        \"blockCode\":\"Y\",        \"currencyCode\":\"156\"      },      {        \"cardNo\":\"5591390000458793\",        \"accountOrgCode\":\"823\",        \"accountLogo\":\"310\",        \"accountNo\":\"0005591390000458793\",        \"customerNo\":\"0006250771000582957\",        \"cardSequenceNo\":1,        \"customerOrgCode\":\"822\",        \"relationshipOrgCode\":\"822\",        \"relationshipNo\":\"0006250771000582957\",        \"nfcEnrolled\":null,        \"nfcAssociatedCardNo\":null,        \"accountStatusCode\":null,        \"cardExpiryDate\":\"2022-03-31\",        \"cardStatusCode\":\"0\",        \"cardholderName\":null,        \"primaryCardNo\":\"0006250771000582957\",        \"primarySupplementaryIndicator\":\"P\",        \"cardholderRMCustomerNo\":\"410039477\",        \"cardToAddressSequenceNo\":1,        \"cardReplacementFee\":0.0E0,        \"highestBlockCode\":\"Y\",        \"cardActivationIndicator\":\"N\",        \"accountBlockCode1\":null,        \"accountBlockCode2\":null,        \"blockCode\":null,        \"currencyCode\":\"840\"      },      {        \"cardNo\":\"5591390000458793\",        \"accountOrgCode\":\"823\",        \"accountLogo\":\"310\",        \"accountNo\":\"0005591390000458793\",        \"customerNo\":\"0006250771000582957\",        \"cardSequenceNo\":1,        \"customerOrgCode\":\"822\",        \"relationshipOrgCode\":\"822\",        \"relationshipNo\":\"0006250771000582957\",        \"nfcEnrolled\":null,        \"nfcAssociatedCardNo\":null,        \"accountStatusCode\":null,        \"cardExpiryDate\":\"2022-03-31\",        \"cardStatusCode\":\"0\",        \"cardholderName\":null,        \"primaryCardNo\":\"0006250771000582957\",        \"primarySupplementaryIndicator\":\"P\",        \"cardholderRMCustomerNo\":\"410039477\",        \"cardToAddressSequenceNo\":1,        \"cardReplacementFee\":0.0E0,        \"highestBlockCode\":\"Y\",        \"cardActivationIndicator\":\"N\",        \"accountBlockCode1\":null,        \"accountBlockCode2\":null,        \"blockCode\":null,        \"currencyCode\":\"840\"      }    ]  }}";
-        System.out.println(json);
+    public void jsonCan() throws UnsupportedEncodingException {
+
+        byte[] aaas = Base64.encode("aaa");
+
+        byte[] decode = java.util.Base64.getDecoder().decode(new String(aaas));
+
+        System.out.println(new String(decode));
 
     }
 
@@ -44,7 +50,8 @@ public class voidTest {
 
         System.out.println(savePath);
 
-        IOHelper.downLoadFromUrl(url, filename, savePath);
+        //IOHelper.downLoadFromUrl(url, filename, savePath);
+        IOHelper.downloadFile(url,savePath);
     }
 
 

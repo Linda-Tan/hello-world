@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -29,7 +31,8 @@ public class IOHelper {
 
     /**
      * 下载网络文件
-     * @param urlStr 下载地址
+     *
+     * @param urlStr   下载地址
      * @param fileName 保存文件名
      * @param savePath 保存路径
      * @throws IOException
@@ -49,7 +52,7 @@ public class IOHelper {
 
         //文件保存位置
         File saveDir = new File(savePath);
-        if (!saveDir.exists()&& !saveDir .isDirectory()) {
+        if (!saveDir.exists() && !saveDir.isDirectory()) {
             saveDir.mkdir();
         }
 
@@ -66,6 +69,40 @@ public class IOHelper {
 
     }
 
+
+    public static File downloadFile(String fileURL, String saveDir) throws IOException {
+
+        File downloadFolder = null;
+        String saveFilePath = null;
+
+        //String username = "guest";
+        //String password = "guest";
+        //
+        //String usepass = username + ":" + password;
+        //String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(usepass.getBytes());
+
+        URL url = new URL(fileURL);
+        HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+     //   httpConn.setRequestProperty("Authorization", basicAuth);
+
+        ReadableByteChannel rbc = Channels.newChannel(httpConn.getInputStream());
+        String fileName = fileURL.substring(fileURL.lastIndexOf("/") + 1, fileURL.length());
+        FileOutputStream fos = new FileOutputStream(fileName);
+
+        saveFilePath = saveDir + File.separator + fileName;
+        downloadFolder = new File(saveDir);
+
+        downloadFolder.deleteOnExit();
+        downloadFolder.mkdirs();
+
+        FileOutputStream outputStream = new FileOutputStream(saveFilePath);
+        outputStream.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+
+        outputStream.close();
+        rbc.close();
+        return new File(saveFilePath);
+    }
+
     public static String greaterNewFileName(String originalName) {
         int pos = originalName.lastIndexOf(".");
         // 获得上传的文件后缀
@@ -77,7 +114,7 @@ public class IOHelper {
     }
 
     public static String readFile(String filepath) throws IOException {
-        File file =new File(filepath);
+        File file = new File(filepath);
         InputStreamReader isr = new InputStreamReader(new FileInputStream(file));
         StringBuilder content = new StringBuilder();
         try {
@@ -85,29 +122,30 @@ public class IOHelper {
             while ((len = isr.read()) != -1) {
                 content.append((char) len);
             }
-        }finally{
+        } finally {
             isr.close();
         }
         return content.toString();
     }
+
     //从指定目录下查找指定文件
-    public static void findFile(File root,String fileName,ArrayList<File> rs){
-        if(!root.isDirectory()){
-            if(fileName.equals(root.getName())){
+    public static void findFile(File root, String fileName, ArrayList<File> rs) {
+        if (!root.isDirectory()) {
+            if (fileName.equals(root.getName())) {
                 rs.add(root);
             }
-        }else{
+        } else {
             for (File f : root.listFiles()) {
-                findFile(f, fileName,rs);
+                findFile(f, fileName, rs);
             }
         }
     }
 
-    public static String getClassPath(String file){
+    public static String getClassPath(String file) {
         URL classPath = Thread.currentThread().getContextClassLoader().getResource("");
         String proFilePath = classPath.toString();
         proFilePath = proFilePath.substring(6);
-        proFilePath= proFilePath+file;
+        proFilePath = proFilePath + file;
         proFilePath = proFilePath.replace("/", File.separator);
         return proFilePath;
     }
