@@ -30,6 +30,7 @@ public class voidTest {
 
         byte[] aaas = Base64.encode("aaa");
 
+        System.out.println(new String(aaas));
         byte[] decode = java.util.Base64.getDecoder().decode(new String(aaas));
 
         System.out.println(new String(decode));
@@ -51,7 +52,7 @@ public class voidTest {
         System.out.println(savePath);
 
         //IOHelper.downLoadFromUrl(url, filename, savePath);
-        IOHelper.downloadFile(url,savePath);
+        IOHelper.downLoadFromUrl(url,filename,savePath.replace("C:","D:"));
     }
 
 

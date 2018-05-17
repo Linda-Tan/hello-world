@@ -21,41 +21,35 @@ public class EmailHelper {
     private static final AtomicInteger count = new AtomicInteger(1);
 
     public static void start(final JavaMailSender mailSender,final SimpleMailMessage message) {
-        service.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    if (count.get() == 2) {
-                        service.shutdown();
-                        log.info("the task is down");
-                    }
-                    log.info("start send email and the index is " + count);
-                    mailSender.send(message);
-                    log.info("send email success");
-                }catch (Exception e){
-                    log.error("send email fail" , e);
+        service.execute(() -> {
+            try {
+                if (count.get() == 2) {
+                    service.shutdown();
+                    log.info("the task is down");
                 }
-
+                log.info("start send email and the index is " + count);
+                mailSender.send(message);
+                log.info("send email success");
+            }catch (Exception e){
+                log.error("send email fail" , e);
             }
+
         });
     }
     public static void startHtml(final JavaMailSender mailSender, final MimeMessage message) {
-        service.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    if (count.get() == 2) {
-                        service.shutdown();
-                        log.info("the task is down");
-                    }
-                    log.info("start send email and the index is " + count);
-                    mailSender.send(message);
-                    log.info("send email success");
-                }catch (Exception e){
-                    log.error("send email fail" , e);
+        service.execute(() -> {
+            try {
+                if (count.get() == 2) {
+                    service.shutdown();
+                    log.info("the task is down");
                 }
-
+                log.info("start send email and the index is " + count);
+                mailSender.send(message);
+                log.info("send email success");
+            }catch (Exception e){
+                log.error("send email fail" , e);
             }
+
         });
     }
 

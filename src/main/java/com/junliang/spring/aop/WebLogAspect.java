@@ -1,5 +1,6 @@
 package com.junliang.spring.aop;
 
+import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -11,7 +12,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
 
 /**
  * 使用 @Aspect注解将一个java类定义为切面类
@@ -32,10 +32,9 @@ public class WebLogAspect {
 
     @Pointcut("execution(public * com.junliang.spring.restcontrol..*.*(..))")
     public void logPointcut(){}
-    @org.aspectj.lang.annotation.Around("logPointcut()")
 
     @Before("logPointcut()")
-    public void doBefore(JoinPoint joinPoint) throws Throwable {
+    public void doBefore(JoinPoint point) {
         startTime.set(System.currentTimeMillis());
         // 接收到请求，记录请求内容
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
@@ -44,13 +43,15 @@ public class WebLogAspect {
         log.info("Request URL : " + request.getRequestURL().toString());
         log.info("http-method : " + request.getMethod());
         log.info("Request IP : " + request.getRemoteAddr());
-        log.info("class.method() : " + joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
-        log.info("args[] : " + Arrays.toString(joinPoint.getArgs()));
+        log.info("class.method() : " + point.getSignature().getDeclaringTypeName() + "." + point.getSignature().getName());
+        log.info("args[] : " + JSON.toJSONString(point.getArgs()));
+
     }
     @AfterReturning(returning = "ret", pointcut = "logPointcut()")
-    public void doAfterReturning(Object ret) throws Throwable {
+    public void doAfterReturning(Object ret){
         // 处理完请求，返回内容
         log.info("Response result : " + ret);
         log.info("total time : " + (System.currentTimeMillis() - startTime.get()));
     }
+
 }

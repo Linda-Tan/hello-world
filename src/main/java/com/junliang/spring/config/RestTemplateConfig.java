@@ -17,6 +17,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
@@ -57,11 +58,44 @@ public class RestTemplateConfig {
     @Bean
     @ConditionalOnMissingBean({ClientHttpRequestFactory.class})
     public ClientHttpRequestFactory simpleClientHttpRequestFactory() {
-        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
-        factory.setReadTimeout(15000);// ms
-        factory.setConnectTimeout(15000);// ms
+        //try {
+        //
+        //    TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
+        //
+        //    SSLContext sslContext = org.apache.http.ssl.SSLContexts.custom()
+        //            .loadTrustMaterial(null, acceptingTrustStrategy)
+        //            .build();
+        //
+        //    SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext);
+        //
+        //    CloseableHttpClient httpClient = HttpClients.custom()
+        //            .setSSLSocketFactory(csf)
+        //            .build();
+        //
+        //    HttpComponentsClientHttpRequestFactory requestFactory =
+        //            new HttpComponentsClientHttpRequestFactory();
+        //
+        //    requestFactory.setHttpClient(httpClient);
+        //
+        //    return  requestFactory;
+        //
+        //
+        //} catch (KeyStoreException | KeyManagementException | NoSuchAlgorithmException e) {
+        //
+        //    SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        //    factory.setReadTimeout(15000);// ms
+        //    factory.setConnectTimeout(15000);// ms
+        //    return factory;
+        //}
 
-        return factory;
+        try {
+            return new HttpComponentsClientHttpRequestFactory(httpClient());
+        } catch (KeyManagementException | NoSuchAlgorithmException e) {
+            SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+            factory.setReadTimeout(15000);// ms
+            factory.setConnectTimeout(15000);// ms
+            return factory;
+        }
     }
 
 

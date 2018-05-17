@@ -46,7 +46,7 @@ public class MybatisConfig  extends MybatisAutoConfiguration {
 
     @Bean
     public SqlSessionFactory sqlSessionFactorys() throws Exception {
-        return super.sqlSessionFactory(roundRobinDataSouceProxy());
+        return super.sqlSessionFactory(roundRobinDataSourceProxy());
     }
 
     /**
@@ -54,7 +54,7 @@ public class MybatisConfig  extends MybatisAutoConfiguration {
      * @return
      */
     @Bean(name="routingDataSource")
-    public AbstractRoutingDataSource roundRobinDataSouceProxy() {
+    public AbstractRoutingDataSource roundRobinDataSourceProxy() {
         DynamicDataSource proxy = new DynamicDataSource();
         Map<Object, Object> targetDataSources = new HashMap<Object, Object>(2);
         // 写
@@ -75,7 +75,7 @@ public class MybatisConfig  extends MybatisAutoConfiguration {
     @Bean(name = "transactionManager")
     public DataSourceTransactionManager transactionManagers() {
         log.info("-------------------- transactionManager init ---------------------");
-        return new DataSourceTransactionManager(roundRobinDataSouceProxy());
+        return new DataSourceTransactionManager(roundRobinDataSourceProxy());
     }
 
 

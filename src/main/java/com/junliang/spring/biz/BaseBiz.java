@@ -3,6 +3,7 @@ package com.junliang.spring.biz;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.junliang.spring.pojo.vo.TableResultResponse;
+import com.junliang.spring.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import tk.mybatis.mapper.common.Mapper;
 import tk.mybatis.mapper.entity.Example;
@@ -17,6 +18,7 @@ import java.util.Map;
  * @date 2018/03/15
  */
 public abstract class BaseBiz<M extends Mapper<T>, T> {
+
     @Autowired
     protected M mapper;
 
@@ -24,46 +26,18 @@ public abstract class BaseBiz<M extends Mapper<T>, T> {
         this.mapper = mapper;
     }
 
-    public T selectOne(T entity) {
-        return mapper.selectOne(entity);
-    }
-
-
-    public T selectById(Object id) {
-        return mapper.selectByPrimaryKey(id);
-    }
-
-
-    public List<T> selectList(T entity) {
-        return mapper.select(entity);
-    }
-
-
-    public List<T> selectListAll() {
-        return mapper.selectAll();
-    }
-
-
-    public Long selectCount(T entity) {
-        return new Long(mapper.selectCount(entity));
-    }
-
 
     public void insert(T entity) {
-        //EntityUtils.setCreatAndUpdatInfo(entity);
+        EntityUtils.setEntityInfo(entity, EntityUtils.cfields);
         mapper.insert(entity);
     }
 
 
     public void insertSelective(T entity) {
-        //EntityUtils.setCreatAndUpdatInfo(entity);
+        EntityUtils.setEntityInfo(entity, EntityUtils.cfields);
         mapper.insertSelective(entity);
     }
 
-
-    public void delete(T entity) {
-        mapper.delete(entity);
-    }
 
 
     public void deleteById(Object id) {
@@ -73,23 +47,18 @@ public abstract class BaseBiz<M extends Mapper<T>, T> {
 
     public void updateById(T entity) {
         //  EntityUtils.setUpdatedInfo(entity);
+        EntityUtils.setEntityInfo(entity, EntityUtils.ufields);
         mapper.updateByPrimaryKey(entity);
     }
 
 
     public void updateSelectiveById(T entity) {
         //  EntityUtils.setUpdatedInfo(entity);
+        EntityUtils.setEntityInfo(entity, EntityUtils.ufields);
         mapper.updateByPrimaryKeySelective(entity);
 
     }
 
-    public List<T> selectByExample(Object example) {
-        return mapper.selectByExample(example);
-    }
-
-    public int selectCountByExample(Object example) {
-        return mapper.selectCountByExample(example);
-    }
 
     public TableResultResponse<T> selectByQuery(LinkedHashMap<String, Object> query) {
         Class<T> clazz = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1];

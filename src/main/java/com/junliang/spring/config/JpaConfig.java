@@ -49,7 +49,7 @@ public class JpaConfig {
                 .dataSource(routingDataSource)
                 .properties(jpaProperties.getProperties())
                 .packages("com.junliang.spring.pojo.entity") //设置实体类所在位置
-                .persistenceUnit("writePersistenceUnit")
+                .persistenceUnit("junliangPersistenceUnit")
                 .build();
         //.getObject();//不要在这里直接获取EntityManagerFactory
     }

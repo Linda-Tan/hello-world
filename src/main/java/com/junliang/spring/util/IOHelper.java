@@ -103,6 +103,7 @@ public class IOHelper {
         return new File(saveFilePath);
     }
 
+
     public static String greaterNewFileName(String originalName) {
         int pos = originalName.lastIndexOf(".");
         // 获得上传的文件后缀
