@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false">
-
+    <contextName>junliang</contextName>
     <!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径-->
     <property name="LOG_HOME" value="../log/spring-boot"/>
 
@@ -10,8 +10,9 @@
         <encoder charset="UTF-8" class="net.logstash.logback.encoder.LogstashEncoder" />
     </appender>-->
 
-
+    <!-- 颜色转换器-->
     <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
+
     <!-- 控制台输出 -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
@@ -27,10 +28,16 @@
             <fileNamePattern>${LOG_HOME}/spring_boot.%d{yyyy-MM-dd}.log</fileNamePattern>
             <!--日志文件保留天数-->
             <MaxHistory>30</MaxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
         </rollingPolicy>
+
+        <!-- 追加方式记录日志 -->
+        <append>true</append>
+
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %-40.40logger{39} : %msg%n</pattern>
+            <charset>utf-8</charset>
         </encoder>
         <!--日志文件最大的大小-->
         <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
@@ -57,6 +64,7 @@
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="FILE"/>
     </root>
+
     <!--日志异步到数据库 -->
     <!--<appender name="DB" class="ch.qos.logback.classic.db.DBAppender">-->
     <!--&lt;!&ndash;日志异步到数据库 &ndash;&gt;-->

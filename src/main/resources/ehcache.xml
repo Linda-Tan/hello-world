@@ -6,15 +6,9 @@
                         http://www.ehcache.org/v3/jsr107 http://www.ehcache.org/schema/ehcache-107-ext-3.5.xsd">
 
     <service>
-        <jsr107:defaults>
-            <jsr107:cache name="people" template="heap-cache"/>
-        </jsr107:defaults>
+        <jsr107:defaults enable-management="true" enable-statistics="true" default-template="heap-cache"/>
     </service>
 
-    <thread-pools>
-    <thread-pool alias="defaultDiskPool" min-size="1" max-size="3"/>
-    </thread-pools>
-    <disk-store thread-pool="defaultDiskPool"></disk-store>
             
     <!-- 定义一个cache 实例配置 别名是 people
      key 的类型为 string
@@ -24,7 +18,6 @@
     <cache alias="people">
         <expiry>
             <!--在缓存级别，再次使用预定义的生存时间。-->
-
             <ttl unit="seconds">20</ttl>
         </expiry>
         <resources>
@@ -33,10 +26,11 @@
         </resources>
     </cache>
 
+    <!-- 定义一个cache模板 ，模板是抽象定义，可以被cache 实例配置继承  -->
     <cache-template name="heap-cache">
         <listeners>
             <listener>
-                <class>com.junliang.spring.listener.EhcacheEventLoggerListener</class>
+                <class>com.cupdata.sip.common.cache.EhcacheEventLoggerListener</class>
                 <event-firing-mode>ASYNCHRONOUS</event-firing-mode>
                 <event-ordering-mode>UNORDERED</event-ordering-mode>
                 <events-to-fire-on>CREATED</events-to-fire-on>
@@ -46,9 +40,10 @@
                 <events-to-fire-on>EVICTED</events-to-fire-on>
             </listener>
         </listeners>
+
         <resources>
-            <heap unit="entries">2000</heap>
-            <offheap unit="MB">100</offheap> <!-- unit of measure is case sensitive! -->
+            <heap>2000</heap>
+            <offheap unit="MB" >100</offheap> <!-- unit of measure is case sensitive! -->
         </resources>
     </cache-template>
 </config>
