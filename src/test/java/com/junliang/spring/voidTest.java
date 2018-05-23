@@ -3,6 +3,7 @@ package com.junliang.spring;
 import com.alibaba.fastjson.JSONObject;
 import com.junliang.spring.util.Base64;
 import com.junliang.spring.util.IOHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.jasypt.encryption.StringEncryptor;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
+@Slf4j
 public class voidTest {
 
     @Autowired
@@ -54,6 +56,8 @@ public class voidTest {
         //IOHelper.downLoadFromUrl(url, filename, savePath);
         IOHelper.downLoadFromUrl(url,filename,savePath.replace("C:","D:"));
     }
+
+
 
 
 }

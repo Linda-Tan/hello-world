@@ -7,6 +7,8 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import java.io.*;
 import java.security.*;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -301,7 +303,7 @@ public class RSAHelper {
      * @return sign Base64 encode
      * @throws Exception
      */
-    public static String sign(String data, PrivateKey privateKey) throws Exception {
+    public static String sign(String data, RSAPrivateKey privateKey) throws Exception {
         // 用私钥对信息生成数字签名
         Signature signature = Signature.getInstance(RSA_SIGNATURE);
         signature.initSign(privateKey);
@@ -319,7 +321,7 @@ public class RSAHelper {
      * @return 校验成功返回true 失败返回false
      * @throws Exception
      */
-    public static boolean verify(String data, PublicKey publicKey, String sign)
+    public static boolean verify(String data, RSAPublicKey publicKey, String sign)
             throws Exception {
         Signature signature = Signature.getInstance(RSA_SIGNATURE);
         signature.initVerify(publicKey);

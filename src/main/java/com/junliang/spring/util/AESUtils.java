@@ -13,8 +13,8 @@ import java.util.Base64;
 /**
  * 利用AES对string进行加密、解密；
  * 非常注意：encodeRules就是秘钥，是需要自己保密的钥匙，对同一个内容不许有同样的秘钥进行加密和解密才能够正确识别；
- * @author admin
  *
+ * @author admin
  */
 public class AESUtils {
     /*
@@ -47,7 +47,7 @@ public class AESUtils {
             // 解决办法：
             // 在项目的Build path中先移除JRE System Library，再添加库JRE System
             // Library，重新编译后就一切正常了。;
-            result= new String(Base64.getEncoder().encode(byte_AES));
+            result = new String(Base64.getEncoder().encode(byte_AES));
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (NoSuchPaddingException e) {
@@ -60,7 +60,7 @@ public class AESUtils {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-        }finally{
+        } finally {
             return result;
         }
     }
@@ -94,19 +94,9 @@ public class AESUtils {
              */
             byte[] byte_decode = cipher.doFinal(byte_content);
             result = new String(byte_decode, "utf-8");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
-            e.printStackTrace();
-        }finally{
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IOException | IllegalBlockSizeException | BadPaddingException e) {
+
+        } finally {
             return result;
         }
     }
@@ -114,9 +104,9 @@ public class AESUtils {
     public static void main(String[] args) {
         String content = "123456";
         String encodeStr = AESUtils.AESEncode("12321", content);
-        System.out.println("加密后："+encodeStr);
+        System.out.println("加密后：" + encodeStr);
         String decodeStr = AESUtils.AESDncode("12321", encodeStr);
-        System.out.println("解密后："+decodeStr);
+        System.out.println("解密后：" + decodeStr);
     }
 
 }
