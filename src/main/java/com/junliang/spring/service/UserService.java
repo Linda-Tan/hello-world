@@ -1,7 +1,6 @@
 package com.junliang.spring.service;
 
 import com.junliang.spring.aop.DataSource;
-import com.junliang.spring.config.DataSourceConfig;
 import com.junliang.spring.dao.mapper.UserMapper;
 import com.junliang.spring.dao.repository.UserRepository;
 import com.junliang.spring.exception.BaseException;
@@ -83,7 +82,7 @@ public class UserService {
                     .setSubject(userInfo.getName())
                     .setExpiration(Date.from(LocalDateTime.now().plusWeeks(1).atZone(ZoneId.of(ZoneId.SHORT_IDS.get("CTT"))).toInstant()))
                     .claim(userInfo.getId(), userInfo.getName())
-                    .signWith(SignatureAlgorithm.RS256, RSAHelper.getPrivateKey(privateKeyFilePath))
+                    .signWith(SignatureAlgorithm.RS256, RSAHelper.getRSAPrivateKey(privateKeyFilePath))
                     .compact();
         } catch (Exception e) {
             log.error(e.getMessage());
