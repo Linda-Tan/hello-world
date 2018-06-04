@@ -211,9 +211,9 @@ public class RSAHelper {
         return getPrivateKey(decoded);
     }
 
-    public static PrivateKey getPrivateKey(String filename)
+    public static PrivateKey getPrivateKey(String filepath)
             throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
-        File f = new File(filename);
+        File f = new File(filepath);
         DataInputStream dis = new DataInputStream(new FileInputStream(f));
         byte[] keyBytes = new byte[(int) f.length()];
         dis.readFully(keyBytes);
