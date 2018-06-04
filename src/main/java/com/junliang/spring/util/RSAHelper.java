@@ -8,9 +8,12 @@ import javax.crypto.NoSuchPaddingException;
 import java.io.*;
 import java.math.BigInteger;
 import java.security.*;
+import java.security.interfaces.RSAKey;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
-import java.security.spec.*;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -51,13 +54,16 @@ public class RSAHelper {
 
 
     private static Cipher CIPHER;
+    private static KeyFactory RSA_KF;
 
     static {
         try {
             CIPHER = Cipher.getInstance(RSA_CIPHER);
+            RSA_KF = KeyFactory.getInstance(RSA_CIPHER);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
             //初始化 失败
             CIPHER = null;
+            RSA_KF = null;
         }
     }
 
@@ -119,23 +125,15 @@ public class RSAHelper {
      *
      * @param key 密钥
      * @return
-     * @throws InvalidKeySpecException
-     * @throws NoSuchAlgorithmException
      */
-    private static Integer getKeySize(Key key) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    private static Integer getKeySize(Key key) {
 
-        KeyFactory kf = KeyFactory.getInstance(RSA_CIPHER);
         BigInteger prime = null;
-        if (key instanceof RSAPublicKey) {
-            RSAPublicKeySpec keySpec = kf.getKeySpec(key, RSAPublicKeySpec.class);
-            prime = keySpec.getModulus();
-        } else if (key instanceof RSAPrivateKey) {
-            RSAPrivateKeySpec keySpec = kf.getKeySpec(key, RSAPrivateKeySpec.class);
-            prime = keySpec.getModulus();
+        if (key instanceof RSAKey) {
+            RSAKey a = (RSAKey) key;
+            prime = a.getModulus();
         }
-        assert prime != null;
-        return prime.toString(2).length();
-
+        return prime != null ? prime.toString(2).length() : 0;
     }
 
     /**
@@ -170,10 +168,9 @@ public class RSAHelper {
     public static RSAPublicKey getRSAPublicKey(byte[] keyBytes) throws NoSuchAlgorithmException, InvalidKeySpecException {
         X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
 
-        KeyFactory kf = KeyFactory.getInstance(RSA_CIPHER);
-        RSAPublicKey publickey = (RSAPublicKey) kf.generatePublic(spec);
+        KeyFactory kf = RSA_KF != null ? RSA_KF : KeyFactory.getInstance(RSA_CIPHER);
 
-        return publickey;
+        return (RSAPublicKey) RSA_KF.generatePublic(spec);
     }
 
     /**
@@ -223,11 +220,9 @@ public class RSAHelper {
 
     public static RSAPrivateKey getRSAPrivateKey(byte[] keyBytes) throws NoSuchAlgorithmException, InvalidKeySpecException {
         PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
-        KeyFactory kf = KeyFactory.getInstance(RSA_CIPHER);
+        KeyFactory kf = RSA_KF != null ? RSA_KF : KeyFactory.getInstance(RSA_CIPHER);
 
-        RSAPrivateKey privateKey = (RSAPrivateKey) kf.generatePrivate(spec);
-
-        return privateKey;
+        return (RSAPrivateKey) kf.generatePrivate(spec);
     }
 
 
