@@ -38,6 +38,9 @@ public class RSAHelper {
 
     public static final String EMPTY = "";
 
+
+    public static final String UTF_8 = "UTF-8";
+
     /**
      * MD5摘要算法和RSA创建并验证PKCS＃1中定义的RSA数字签名
      * SHA1withRSA
@@ -78,10 +81,9 @@ public class RSAHelper {
     public static String encrypt(Key key, String raw) throws Exception {
         // Cipher负责完成加密或解密工作，基于RSA
         Cipher cipher = CIPHER != null ? CIPHER : Cipher.getInstance(RSA_CIPHER);
-        Base64.Encoder encoder = Base64.getEncoder();
         cipher.init(Cipher.ENCRYPT_MODE, key);
 
-        byte[] data = raw.getBytes();
+        byte[] data = raw.getBytes(UTF_8);
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
@@ -91,7 +93,7 @@ public class RSAHelper {
         byte[] encryptedData = out.toByteArray();
         out.close();
 
-        return encoder.encodeToString(encryptedData);
+        return new String(Base64.getEncoder().encode(encryptedData), UTF_8);
     }
 
     /**
@@ -105,10 +107,9 @@ public class RSAHelper {
     public static String decrypt(Key key, String text) throws Exception {
         // Cipher负责完成加密或解密工作，基于RSA
         Cipher cipher = CIPHER != null ? CIPHER : Cipher.getInstance(RSA_CIPHER);
-        Base64.Decoder decoder = Base64.getDecoder();
         cipher.init(Cipher.DECRYPT_MODE, key);
 
-        byte[] encryptedData = decoder.decode(text);
+        byte[] encryptedData = Base64.getDecoder().decode(text.getBytes(UTF_8));
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         Integer keySize = getKeySize(key);
@@ -117,7 +118,7 @@ public class RSAHelper {
         cipherSection(cipher, encryptedData, out, keySize / 8);
         byte[] decryptedData = out.toByteArray();
         out.close();
-        return new String(decryptedData);
+        return new String(decryptedData, UTF_8);
     }
 
     /**
@@ -170,7 +171,7 @@ public class RSAHelper {
 
         KeyFactory kf = RSA_KF != null ? RSA_KF : KeyFactory.getInstance(RSA_CIPHER);
 
-        return (RSAPublicKey) RSA_KF.generatePublic(spec);
+        return (RSAPublicKey) kf.generatePublic(spec);
     }
 
     /**
@@ -194,17 +195,17 @@ public class RSAHelper {
     @Deprecated
     public static RSAPublicKey getBase64RSAPublicKey(String filepath)
             throws InvalidKeySpecException, NoSuchAlgorithmException, IOException {
-        byte[] keyBytes = Base64.getDecoder().decode(IOHelper.readFile(filepath));
+        byte[] keyBytes = Base64.getDecoder().decode(IOHelper.readFile(filepath).getBytes(UTF_8));
         return getRSAPublicKey(keyBytes);
     }
 
 
-    public static RSAPublicKey getPemRSAPublicKey(String contentBase64) throws InvalidKeySpecException, NoSuchAlgorithmException {
-        String RSAPublicKeyPEM = contentBase64.replace("-----BEGIN PUBLIC KEY-----", EMPTY)
+    public static RSAPublicKey getPemRSAPublicKey(String contentBase64) throws Exception {
+        String publicKeyPEM = contentBase64.replace("-----BEGIN PUBLIC KEY-----", EMPTY)
                 .replace("-----END PUBLIC KEY-----", EMPTY)
                 .replace(LF, EMPTY).replace(CR, EMPTY)
                 .replace(SPACE, "+");
-        byte[] decoded = Base64.getDecoder().decode(RSAPublicKeyPEM);
+        byte[] decoded = Base64.getDecoder().decode(publicKeyPEM.getBytes(UTF_8));
         return getRSAPublicKey(decoded);
     }
 
@@ -226,13 +227,13 @@ public class RSAHelper {
     }
 
 
-    public static RSAPrivateKey getPemRSAPrivateKey(String contentBase64) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public static RSAPrivateKey getPemRSAPrivateKey(String contentBase64) throws Exception {
         String privKeyPEM = contentBase64.replace("-----BEGIN PRIVATE KEY-----", EMPTY)
                 .replace("-----END PRIVATE KEY-----", EMPTY)
                 .replace(LF, EMPTY).replace(CR, EMPTY)
                 .replace(SPACE, "+");
 
-        byte[] decoded = Base64.getDecoder().decode(privKeyPEM);
+        byte[] decoded = Base64.getDecoder().decode(privKeyPEM.getBytes(UTF_8));
         return getRSAPrivateKey(decoded);
     }
 
@@ -249,7 +250,7 @@ public class RSAHelper {
     @Deprecated
     public static RSAPrivateKey getBase64RSAPrivateKey(String filepath)
             throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
-        byte[] keyBytes = Base64.getDecoder().decode(IOHelper.readFile(filepath));
+        byte[] keyBytes = Base64.getDecoder().decode(IOHelper.readFile(filepath).getBytes(UTF_8));
         return getRSAPrivateKey(keyBytes);
     }
 
@@ -292,11 +293,11 @@ public class RSAHelper {
     public static Map<String, String> generateBase64Key(String RSAPublicKeyFilename, String RSAPrivateKeyFilename)
             throws Exception {
         Map<String, byte[]> keyPair = generateRSAKey(KEY_SIZE);
-        String stringPubKey = Base64.getEncoder().encodeToString(keyPair.get(PUB_KEY_NAME));
+        String stringPubKey = new String(Base64.getEncoder().encode(keyPair.get(PUB_KEY_NAME)), UTF_8);
         OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(RSAPublicKeyFilename));
         osw.write(stringPubKey);
         osw.close();
-        String stringPriKey = Base64.getEncoder().encodeToString(keyPair.get(PRI_KEY_NAME));
+        String stringPriKey = new String(Base64.getEncoder().encode(keyPair.get(PRI_KEY_NAME)), UTF_8);
         osw = new OutputStreamWriter(new FileOutputStream(RSAPrivateKeyFilename));
         osw.write(stringPriKey);
         osw.close();
@@ -332,7 +333,7 @@ public class RSAHelper {
     }
 
     /**
-     * 判断一个数是否是2的整数次幂
+     * 判断必须大于512并且是2的整数幂。
      *
      * @param number
      * @return
@@ -359,9 +360,9 @@ public class RSAHelper {
         // 用私钥对信息生成数字签名
         Signature signature = Signature.getInstance(RSA_SIGNATURE);
         signature.initSign(RSAPrivateKey);
-        signature.update(data.getBytes());
+        signature.update(data.getBytes(UTF_8));
 
-        return Base64.getEncoder().encodeToString(signature.sign());
+        return new String(Base64.getEncoder().encode(signature.sign()),UTF_8);
     }
 
     /**
@@ -378,9 +379,9 @@ public class RSAHelper {
         sign = sign.replace(SPACE, "+");
         Signature signature = Signature.getInstance(RSA_SIGNATURE);
         signature.initVerify(RSAPublicKey);
-        signature.update(data.getBytes());
+        signature.update(data.getBytes(UTF_8));
 
-        byte[] decode = Base64.getDecoder().decode(sign);
+        byte[] decode = Base64.getDecoder().decode(sign.getBytes(UTF_8));
         // 验证签名是否正常
         return signature.verify(decode);
     }
@@ -389,28 +390,26 @@ public class RSAHelper {
     public static void main(String[] args) throws Exception {
 
         //generateRSAKey(1);
-        String sslpub = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDNWRE+EkrY2OoLOcRgvVkOF9tjQ7xMomSoXehwDhguSSWLuyRXegRrRJKVOhluXLyxcIsDL2uV90xDFn06/z5TzTrilnQ36NlftnhydSCqJn4J3Cr2AIOVexQjj5GtWUZp5aDXI6BnMNci5g7Zm27VDxvUifumSOo2xYEHRPhdVQIDAQAB";
+        String sslpub = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCX9sBBXYJdWDp0lOg4WyMH4XQY1zkj+LHBcx7jbe24xfJHM2kFhIuckPmXD52ekqrvI3h/jLveRTQ55Oksj2NYW64S5Hk44+vtTe+nsM7VetQaRNNQMRwCcPQqkostveOEFQb4TKqzH0kpOX8olYIicNOcb0IvoLt0iN368hg/NwIDAQAB";
 
-        String sslpri = "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAM1ZET4SStjY6gs5xGC9WQ4X22NDvEyiZKhd6HAOGC5JJYu7JFd6BGtEkpU6GW5cvLFwiwMva5X3TEMWfTr/PlPNOuKWdDfo2V+2eHJ1IKomfgncKvYAg5V7FCOPka1ZRmnloNcjoGcw1yLmDtmbbtUPG9SJ+6ZI6jbFgQdE+F1VAgMBAAECgYAKuXvdzMlFbYC9sNjpf4Ia6xKNauB29SVCKNNmpMnNAwt3soCpo+j+rDBmpEfnPGcrcjgEZNHe3XFJcK9+KQ35bQO0qQixVAaSrkkf3GGr63/+Krsho2GAiEvn5x/W8KSqGyPhbmGPI7mqpN4qrH2JZ/1Orvfnn21qFLe1vS3AYQJBAOZ3HCr9lkRrqNK2Lklvg1Vcq++6wL895LT2bv7nC/4gwSotAx+Ht7yrpyYkgPTrV8Wr7kfAQX+2/TXsPw8ef6ECQQDkGYgZRrLw0akjYqtF9foFeUY8Ej1U7rZEgNRU2dH97X03iUBQ/Csyg/lc8K6TnMvMrxsZOEOlbWBU3XdPhlE1AkEAggSeio5n8Q+/vahz8pALyuOuSF/Wj82uMn143yuf822tLEsaoPYjLTi14unjKsl+yhEWK7qF+TRWI861QKVXIQJBAID+R080AiHaD3Kpa/5menv591QlZHXRgVYAHRPXEsAtO/DaN3sVAEDTDYQXwEJOG5qnNAXxIaA92IplrAFXDjkCQBvNazeDAPc3uYRfvT+GIT+Yh54j5V2Xe0MM0n9lN/jNwDYZO8WoAlEnlcFxykmV7OLjjxRCcyJM/AKLyXFLIhA=";
+        String sslpri = "MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAJf2wEFdgl1YOnSU6DhbIwfhdBjXOSP4scFzHuNt7bjF8kczaQWEi5yQ+ZcPnZ6Squ8jeH+Mu95FNDnk6SyPY1hbrhLkeTjj6+1N76ewztV61BpE01AxHAJw9CqSiy2944QVBvhMqrMfSSk5fyiVgiJw05xvQi+gu3SI3fryGD83AgMBAAECgYALWtu4xqT0FqCfj3TeqSiv8Q+8v3A8mNunadO4CMHHmbrlyRii2emYtFiCCh+r9qehINRjK3/qNt+VJ96ofrpchVtRqVts+Tq4lPppqSj9E2IxcMcxQiGfCcPYPb5rxpYGYJQTcZzSVJKsGMERSmzLKZ4SRSpugzjiFymMaOKQSQJBAMWSmKjyvQGHe8mIOjFiq6ZP5JK4FZ8BcLxQWkRTce598D2cmiDjJW1V+7G5VBBEq4PaF1UaBb2PoPARZYHUzXsCQQDE503dycyeL9zbf2OxJ/tjiDEmLiawRhth/wlcdGZjqh1MVdJmG03YKgiZv1hxDoqc0mw0uqkK/EpeHG7V5CJ1AkAo/Mym4BTN6GmJ2bUY4btyeUiWF5KEtivJJXJUkmskawQYBBEFmZn+IMRijmweI+DhLbGBejCOrulYZIOGd7tZAkA2Sy1uZZGVYM8+ew7rL4Ii/M/InlsuqfYs/F0BcFs3ShYQEW4Vl5vMajK66kchzYetHFyX4YxxKgX7k02AjwptAkBvIoltg85QzGFkk+aGRVr6S2EieyCYQ6NL669AcbZMuUyBJ/zgM/ITDONbSZxqU0nLWm/t0Fp3jnem8YlQ/+UZ";
 
-        String testStr = "emUwPEA9NJSd3cXt4D2qNX9UgSIp3RQyFB1uGZa64nkNpKWynA7v0n2zx90kkeU6qc2//WN1yiiyVWgJ27YDgiJo4N2H2IMGOXkIodFT++acBbsdYOnloK7rMijko6z1bArIHbyaxoL8w51NDlnuX+96va3d9/otVNxTNqdng1U=";
+        String testStr = "{\"sipTranNo\":\"20180605211834152a0D1Wt2q\",\"payBackUrl\":\"https://sd.auto1768.com:8480/ShengDaJLYH/jlyh/finish.jhtm\",\"supOrderTime\":\"20180605213048721\",\"orderShow\":\"1元洗车\",\"timestamp\":\"20180605213048721ACENDD25\",\"orderInfo\":\"{\\\"startTime\\\":\\\"20180605213048721\\\",\\\"productNum\\\":\\\"1\\\",\\\"package\\\":\\\"1元洗车\\\",\\\"couponCode\\\":\\\"JLYHFAHH5827\\\",\\\"productPrice\\\":\\\"100\\\",\\\"productName\\\":\\\"1元洗车\\\"}\",\"orderTitle\":\"1元洗车\",\"timeOut\":\"15\",\"supOrderNo\":\"JLYHFAHH5827\",\"productNum\":\"1\",\"notifyUrl\":\"https://sd.auto1768.com:8480/ShengDaJLYH/jlyh/pay-notify.jhtm\",\"productName\":\"1元洗车券\",\"orderAmt\":\"100\"}";
         RSAPublicKey pemPublicKey = RSAHelper.getPemRSAPublicKey(sslpub);
         RSAPrivateKey pemPrivateKey = RSAHelper.getPemRSAPrivateKey(sslpri);
         long integer = 0l;
-        for (int i = 0; i < 100; i++) {
-            long l = System.currentTimeMillis();
-            String testStr1 = RSAHelper.encrypt(pemPublicKey, testStr);
-            System.out.println(testStr1);
-            String decipher = RSAHelper.decrypt(pemPrivateKey, testStr1);
-            System.out.println(decipher);
-            // System.out.println(URLDecoder.decode(decipher, "utf-8"));
-            String sign = RSAHelper.sign(decipher, pemPrivateKey);
-            System.out.println(sign);
-            System.out.println(RSAHelper.verify(decipher, pemPublicKey, sign) + "");
-            System.out.println((System.currentTimeMillis() - l) + "----------------------------");
-            integer += System.currentTimeMillis() - l;
-        }
-        System.out.println(integer);
+        long l = System.currentTimeMillis();
+        String testStr1 = RSAHelper.encrypt(pemPublicKey, testStr);
+        System.out.println(testStr1);
+        String decipher = RSAHelper.decrypt(pemPrivateKey, testStr1);
+        System.out.println(decipher);
+        // System.out.println(URLDecoder.decode(decipher, "utf-8"));
+        String sign = RSAHelper.sign(decipher, pemPrivateKey);
+        System.out.println(sign);
+        System.out.println(RSAHelper.verify(decipher, pemPublicKey, sign.replace(" ", "+")) + "");
+        System.out.println((System.currentTimeMillis() - l) + "----------------------------");
+        integer += System.currentTimeMillis() - l;
+        System.out.println(pemPublicKey);
 
     }
 
