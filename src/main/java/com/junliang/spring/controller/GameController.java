@@ -2,7 +2,7 @@ package com.junliang.spring.controller;
 
 
 import com.junliang.spring.util.IOHelper;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-@Slf4j
+@Log4j2
 @Controller
 @RequestMapping("game")
 public class GameController {

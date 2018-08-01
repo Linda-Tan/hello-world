@@ -10,7 +10,7 @@ import com.junliang.spring.util.BeanCopierUtils;
 import com.junliang.spring.util.RSAHelper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ import java.util.Date;
 /**
  * Created by Toni_ on 2017/9/20.
  */
-@Slf4j
+@Log4j2
 @Service
 public class UserService {
 

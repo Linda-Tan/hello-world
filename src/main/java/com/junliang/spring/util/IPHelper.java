@@ -1,6 +1,6 @@
 package com.junliang.spring.util;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
-@Slf4j
+@Log4j2
 public class IPHelper {
     /**
      * 获得服务器的IP地址

@@ -1,6 +1,6 @@
 package com.junliang.spring.config;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.apache.ibatis.mapping.DatabaseIdProvider;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 @Configuration
 @AutoConfigureAfter({ DataSourceConfig.class })
-@Slf4j
+@Log4j2
 @MapperScan(basePackages = { "com.junliang.spring.dao.mapper" })
 @EnableTransactionManagement
 @ConditionalOnClass({EnableTransactionManagement.class})

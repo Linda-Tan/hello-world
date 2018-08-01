@@ -7,7 +7,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.springframework.util.Assert;
@@ -18,7 +18,7 @@ import org.springframework.util.Assert;
  * @author calvin
  * @version 2013-01-15
  */
-@Slf4j
+@Log4j2
 @SuppressWarnings("rawtypes")
 public class ReflectionUtils {
 

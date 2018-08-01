@@ -4,7 +4,7 @@ import com.junliang.spring.constant.ResponseCode;
 import com.junliang.spring.constant.StatusCodeEnum;
 import com.junliang.spring.pojo.vo.BaseResponse;
 import com.junliang.spring.pojo.vo.ObjectRestResponse;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.executable.ValidateOnExecution;
 import java.util.*;
 
-@Slf4j
+@Log4j2
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 

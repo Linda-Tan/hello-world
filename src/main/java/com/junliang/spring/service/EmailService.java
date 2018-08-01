@@ -1,7 +1,7 @@
 package com.junliang.spring.service;
 
 import com.junliang.spring.pojo.bean.Email;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,7 +27,7 @@ import java.io.File;
  * 支持邮件模板
  *
  */
-@Slf4j
+@Log4j2
 @Service
 public class EmailService {
 

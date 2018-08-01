@@ -1,6 +1,6 @@
 package com.junliang.spring.util;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -10,7 +10,7 @@ import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.UUID;
 
-@Slf4j
+@Log4j2
 public class IOHelper {
 
     public static final InputStream byte2Input(byte[] buf) {

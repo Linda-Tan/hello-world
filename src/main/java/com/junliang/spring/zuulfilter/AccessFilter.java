@@ -10,14 +10,14 @@ import com.netflix.zuul.context.RequestContext;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 
-@Slf4j
+@Log4j2
 @Component
 public class AccessFilter extends ZuulFilter {
 

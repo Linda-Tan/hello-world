@@ -5,7 +5,7 @@ import com.junliang.spring.pojo.bean.Email;
 import com.junliang.spring.pojo.vo.BaseResponse;
 import com.junliang.spring.pojo.vo.ObjectRestResponse;
 import com.junliang.spring.service.EmailService;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -18,7 +18,7 @@ import javax.mail.internet.MimeMessage;
 import java.util.HashMap;
 import java.util.Map;
 
-@Slf4j
+@Log4j2
 @RequestMapping("hello")
 @RestController
 public class TestController {

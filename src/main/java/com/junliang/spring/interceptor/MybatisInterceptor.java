@@ -1,6 +1,6 @@
 package com.junliang.spring.interceptor;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.ParameterMapping;
@@ -18,7 +18,7 @@ import java.util.Properties;
 /**
  * Sql执行时间记录拦截器
  */
-@Slf4j
+@Log4j2
 @Intercepts({
         @Signature(type = StatementHandler.class, method = "query", args = { Statement.class, ResultHandler.class }),
         @Signature(type = StatementHandler.class, method = "update", args = { Statement.class }),

@@ -1,6 +1,6 @@
 package com.junliang.spring.util;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * 异步发送邮件
  */
 
-@Slf4j
+@Log4j2
 public class EmailHelper {
 
     private static ScheduledExecutorService service = Executors.newScheduledThreadPool(6);

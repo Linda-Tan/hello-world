@@ -1,7 +1,7 @@
 package com.junliang.spring.aop;
 
 import com.junliang.spring.config.DynamicDataSource;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Method;
 
 @Aspect
-@Slf4j
+@Log4j2
 @Component
 public class MultiDataSourceEx {
 

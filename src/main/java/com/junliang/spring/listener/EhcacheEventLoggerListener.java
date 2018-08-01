@@ -1,10 +1,10 @@
 package com.junliang.spring.listener;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.ehcache.event.CacheEvent;
 import org.ehcache.event.CacheEventListener;
 
-@Slf4j
+@Log4j2
 public class EhcacheEventLoggerListener implements CacheEventListener<Object,Object> {
 
     @Override

@@ -1,7 +1,7 @@
 package com.junliang.spring.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Primary;
 
 import javax.sql.DataSource;
 
-@Slf4j
+@Log4j2
 @Configuration
 public class DataSourceConfig {
 
