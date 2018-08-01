@@ -2,28 +2,25 @@ package com.junliang.spring;
 
 import com.alibaba.fastjson.JSONObject;
 import com.junliang.spring.util.Base64;
-import com.junliang.spring.util.IOHelper;
-import lombok.extern.slf4j.Slf4j;
-import org.jasypt.encryption.StringEncryptor;
+import lombok.extern.log4j.Log4j2;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-@Slf4j
+@Log4j2
 public class voidTest {
 
-    @Autowired
-    StringEncryptor stringEncryptor;
-
-    @Test
-    public void encryptPwd() {
-        String result = stringEncryptor.encrypt("root");
-        System.out.println(result);
-    }
+    //@Autowired
+    //StringEncryptor stringEncryptor;
+    //
+    //@Test
+    //public void encryptPwd() {
+    //    String result = stringEncryptor.encrypt("root");
+    //    System.out.println(result);
+    //}
 
 
 
@@ -51,11 +48,22 @@ public class voidTest {
         String savePath = System.getProperty("user.home") + File.separator+ "Pictures" +File.separator + "bing";
         String filename =sourcePath.substring(sourcePath.lastIndexOf("/"));
 
-        System.out.println(savePath);
+        log.info(savePath);
 
         //IOHelper.downLoadFromUrl(url, filename, savePath);
-        IOHelper.downLoadFromUrl(url,filename,savePath.replace("C:","D:"));
+        //IOHelper.downLoadFromUrl(url,filename,savePath.replace("C:","D:"));
     }
 
+
+    @Test
+    public void testLog() {
+
+        log.debug("Debugging log");
+        log.info("Info log");
+        log.warn("Hey, This is a warning!");
+        log.error("Oops! We have an Error. OK");
+        log.fatal("Damn! Fatal error. Please fix me.");
+
+    }
 
 }
