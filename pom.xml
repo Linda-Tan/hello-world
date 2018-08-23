@@ -346,6 +346,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version>
                 <configuration>
                     <!-- 指定启动类 -->
                     <mainClass>com.junliang.spring.HelloWorldApplication</mainClass>

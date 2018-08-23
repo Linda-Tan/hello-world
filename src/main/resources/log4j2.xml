@@ -9,7 +9,7 @@
     <properties>
         <Property name="fileName">/Users/admin/Code/log</Property>
         <Property name="fileGz">/Users/admin/Code/log/7z</Property>
-        <Property name="PID">????</Property>
+        <Property name="PID">spring-boot</Property>
         <Property name="LOG_PATTERN">%clr{%d{yyyy-MM-dd HH:mm:ss.SSS}}{faint} %clr{%5p} %clr{${sys:PID}}{magenta} %clr{---}{faint} %clr{[%15.15t]}{faint} %clr{%-40.40c{1.}}{cyan} %clr{:}{faint} %m%n%xwEx</Property>
     </properties>
 

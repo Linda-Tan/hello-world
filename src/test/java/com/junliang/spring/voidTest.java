@@ -1,7 +1,9 @@
 package com.junliang.spring;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.junliang.spring.util.Base64;
+import com.junliang.spring.util.IOHelper;
 import lombok.extern.log4j.Log4j2;
 import org.junit.Test;
 import org.springframework.web.client.RestTemplate;
@@ -41,6 +43,7 @@ public class voidTest {
     public void getBingPicture() throws IOException {
 
         RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(new FastJsonHttpMessageConverter());
         JSONObject jsonObject = restTemplate.getForObject("https://cn.bing.com/HPImageArchive.aspx?format=js&n=1", JSONObject.class);
         String sourcePath =jsonObject.getJSONArray("images").getJSONObject(0).getString("url");
         String url = "https://cn.bing.com" + sourcePath;
@@ -51,7 +54,7 @@ public class voidTest {
         log.info(savePath);
 
         //IOHelper.downLoadFromUrl(url, filename, savePath);
-        //IOHelper.downLoadFromUrl(url,filename,savePath.replace("C:","D:"));
+        IOHelper.downLoadFromUrl(url,filename,savePath.replace("C:","D:"));
     }
 
 
