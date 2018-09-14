@@ -62,11 +62,11 @@
 
     <!-- Mixed sync/async -->
     <Loggers>
-        <Root level="debug" includeLocation="true">
+        <!--<Root level="debug" includeLocation="true">
             <AppenderRef ref="console"/>
             <AppenderRef ref="infoFile"/>
             <AppenderRef ref="errorFile"/>
-        </Root>
+        </Root>-->
 
         <AsyncRoot level="debug" includeLocation="true">
             <AppenderRef ref="console"/>
