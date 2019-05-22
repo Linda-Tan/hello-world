@@ -28,8 +28,16 @@ public class HelloWorldApplicationTests {
     public void contextLoads() {
     }
 
-    @Autowired(required=true)
-     private StringEncryptor stringEncryptor;//密码解码器自动注入
+    @Autowired
+    StringEncryptor stringEncryptor;
+
+    @Test
+    public void encryptPwd() {
+        String result = stringEncryptor.encrypt("yourpassword");
+        System.out.println("==================");
+        System.out.println(result);
+        System.out.println("==================");
+    }
 
     @Test
     public void stringEncryptortest() {

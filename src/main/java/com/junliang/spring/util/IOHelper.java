@@ -8,6 +8,7 @@ import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.UUID;
 
 @Log4j2
@@ -136,18 +137,18 @@ public class IOHelper {
                 rs.add(root);
             }
         } else {
-            for (File f : root.listFiles()) {
+            for (File f : Objects.requireNonNull(root.listFiles())) {
                 findFile(f, fileName, rs);
             }
         }
     }
 
-    public static String getClassPath(String file) {
+    public static String getClassPath() {
         URL classPath = Thread.currentThread().getContextClassLoader().getResource("");
         String proFilePath = classPath.toString();
-        proFilePath = proFilePath.substring(6);
-        proFilePath = proFilePath + file;
-        proFilePath = proFilePath.replace("/", File.separator);
+        //proFilePath = proFilePath.substring(6);
+        //proFilePath = proFilePath + file;
+        //proFilePath = proFilePath.replace("/", File.separator);
         return proFilePath;
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.time.LocalDate;
 
 @Log4j2
 public class voidTest {
@@ -49,12 +50,22 @@ public class voidTest {
         String url = "https://cn.bing.com" + sourcePath;
         //String usrHome = System.getProperty("user.home");
         String savePath = System.getProperty("user.home") + File.separator+ "Pictures" +File.separator + "bing";
-        String filename =sourcePath.substring(sourcePath.lastIndexOf("/"));
+        String filename = LocalDate.now() +sourcePath.substring(sourcePath.lastIndexOf("."),sourcePath.lastIndexOf("&"));
 
         log.info(savePath);
 
-        //IOHelper.downLoadFromUrl(url, filename, savePath);
+        //IOHelper.downloadFile(url,savePath);
         IOHelper.downLoadFromUrl(url,filename,savePath.replace("C:","D:"));
+    }
+
+
+    @Test
+    public void test() {
+
+        String str = "/th?id=OHR.xiaoicepainting_ZH-CN8581660984_1920x1080.jpg&rf=LaDigue_1920x1080.jpg&pid=hp";
+
+        System.out.println(str.substring(str.lastIndexOf("."),str.lastIndexOf("&")));
+
     }
 
 

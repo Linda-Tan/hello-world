@@ -155,7 +155,7 @@ pagehelper:
 logging:
   level:
     com.junliang.spring.dao.mapper: debug
-  config: classpath:logback-dev.xml
+  config: classpath:logback.xml
 
 #  file: ../log/spring-boot/spring_boot.%d{yyyy-MM-dd}.log
 #banner:

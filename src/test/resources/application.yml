@@ -153,7 +153,7 @@ pagehelper:
 logging:
   level:
     com.junliang.spring.dao.mapper: debug
-  config: classpath:logback-dev.xml
+  config: classpath:logback.xml
 
 #  file: ../log/spring-boot/spring_boot.%d{yyyy-MM-dd}.log
 #banner:
@@ -161,7 +161,7 @@ logging:
 #    location: static/image/springcloud.png
 banner:
   charset: UTF-8
-  location: static/banner.txt
+  location: ../../main/evn/dev/banner.txt
 
 myProps: #自定义的属性和值
   jwt:

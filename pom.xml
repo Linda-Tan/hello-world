@@ -31,6 +31,7 @@
         <commons-lang3.version>3.6</commons-lang3.version>
         <mybatis-tool.version>1.2.3</mybatis-tool.version>
         <HikariCP.version>2.7.3</HikariCP.version>
+        <mysql.version>5.1.47</mysql.version>
 
         <swagger.version>2.7.0</swagger.version>
         <nekohtml.version>1.9.22</nekohtml.version>
@@ -39,7 +40,7 @@
         <ehcache.version>3.5.2</ehcache.version>
         <disruptor.version>3.4.2</disruptor.version>
 
-        <target.dir>D:\${revision}</target.dir>
+        <target.dir>${basedir}</target.dir>
     </properties>
 
     <dependencies>
@@ -321,9 +322,97 @@
     </dependencyManagement>
 
     <build>
-        <finalName>${artifactId}</finalName>
+        <finalName>${project.artifactId}</finalName>
 
         <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- maven 打包指定编译 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+
+            </plugin>
+            <!-- maven 打包时跳过测试 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <!-- 对发布的POM进行精简  -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <configuration>
+                    <updatePomFile>true</updatePomFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>generator/*</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>src/main/evn/${env}</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+    </build>
+
+
+
+    <profiles>
+        <profile>
+            <id>fastjar</id>
+            <build>
+            <plugins>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -381,7 +470,7 @@
                         </goals>
                         <configuration>
                             <tasks>
-                                <mkdir dir="${target.dir}"/>
+                                <!--                                <mkdir dir="${target.dir}"/>-->
                                 <copy todir="${target.dir}" overwrite="true">
                                     <fileset dir="${project.build.directory}" erroronmissingdir="false">
                                         <include name="*.jar"/>
@@ -392,80 +481,9 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- maven 打包指定编译 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-
-            </plugin>
-            <!-- maven 打包时跳过测试 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-            <!-- 打包排除生成目录 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>**/generator/**</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-            <!-- 对发布的POM进行精简  -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>flatten-maven-plugin</artifactId>
-                <configuration>
-                    <updatePomFile>true</updatePomFile>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>flatten</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>flatten</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>flatten.clean</id>
-                        <phase>clean</phase>
-                        <goals>
-                            <goal>clean</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-        <resources>
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>*.xml</include>
-                </includes>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <excludes>
-                    <exclude>dev/*</exclude>
-                    <exclude>prd/*</exclude>
-                    <exclude>generator/*</exclude>
-                </excludes>
-            </resource>
-            <resource>
-                <directory>src/main/resources/${env}</directory>
-            </resource>
-        </resources>
-    </build>
-    <profiles>
+            </plugins>
+            </build>
+        </profile>
         <profile>
             <id>dev</id>
             <properties>
@@ -481,8 +499,6 @@
                 <env>prd</env>
             </properties>
         </profile>
-
-
         <profile>
             <id>release</id>
             <build>
@@ -555,21 +571,10 @@
                         <artifactId>mybatis-generator-maven-plugin</artifactId>
                         <version>1.3.5</version>
                         <configuration>
-                            <configurationFile>${basedir}/src/main/resources/generator/generatorConfig.xml
-                            </configurationFile>
+                            <configurationFile>${basedir}/src/main/resources/generator/generatorConfig.xml</configurationFile>
                             <overwrite>true</overwrite>
                             <verbose>true</verbose>
-                            <!--<skip>true</skip>-->
                         </configuration>
-                        <!--<executions>-->
-                        <!--<execution>-->
-                        <!--<id>Generate MyBatis Artifacts</id>-->
-                        <!--<phase>deploy</phase>-->
-                        <!--<goals>-->
-                        <!--<goal>generate</goal>-->
-                        <!--</goals>-->
-                        <!--</execution>-->
-                        <!--</executions>-->
                         <dependencies>
                             <dependency>
                                 <groupId>org.mybatis.generator</groupId>
@@ -583,8 +588,8 @@
                             </dependency>
                             <dependency>
                                 <groupId>tk.mybatis</groupId>
-                                <artifactId>mapper</artifactId>
-                                <version>3.4.0</version>
+                                <artifactId>mapper-generator</artifactId>
+                                <version>1.0.0</version>
                             </dependency>
                         </dependencies>
                     </plugin>

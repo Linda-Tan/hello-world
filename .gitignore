@@ -1,6 +1,8 @@
 target/
 !.mvn/wrapper/maven-wrapper.jar
 .flattened-pom.xml
+lib/
+*.jar
 
 ### STS ###
 .apt_generated
