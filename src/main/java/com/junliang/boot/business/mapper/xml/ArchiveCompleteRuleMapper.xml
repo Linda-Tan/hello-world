@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.junliang.boot.business.mapper.ArchiveCompleteRuleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.junliang.boot.business.entity.ArchiveCompleteRuleDO">
+        <result column="id" property="id" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="tenant_id" property="tenantId" />
+        <result column="created_by" property="createdBy" />
+        <result column="created_date" property="createdDate" />
+        <result column="last_modified_by" property="lastModifiedBy" />
+        <result column="last_modified_date" property="lastModifiedDate" />
+        <result column="rule_code" property="ruleCode" />
+        <result column="rule_name" property="ruleName" />
+        <result column="rule_desc" property="ruleDesc" />
+        <result column="necessary_document" property="necessaryDocument" />
+        <result column="is_enabled" property="isEnabled" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        is_deleted,
+        tenant_id,
+        created_by,
+        created_date,
+        last_modified_by,
+        last_modified_date,
+        rule_code, rule_name, rule_desc, necessary_document, is_enabled
+    </sql>
+
+</mapper>

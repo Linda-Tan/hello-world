@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    #  dev
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://106.15.120.125:21906/e_archives_private?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useAffectedRows=true&rewriteBatchedStatements=true
+    username: artemis
+    password: 123456Ms3
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
