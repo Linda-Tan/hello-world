@@ -1,6 +1,7 @@
 package com.junliang.boot.config;
 
 import com.baomidou.mybatisplus.annotation.DbType;
+import com.baomidou.mybatisplus.autoconfigure.ConfigurationCustomizer;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
@@ -14,6 +15,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 /**
  * TODO desc
  *
@@ -24,6 +27,10 @@ import org.springframework.stereotype.Component;
 @Configuration
 public class MybatisPlusConfig {
 
+    /**
+     * 注意排序
+     * @return
+     */
     @Bean
     public MybatisPlusInterceptor mybatisPlusInterceptor() {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
@@ -35,19 +42,17 @@ public class MybatisPlusConfig {
                 return new LongValue(1);
             }
 
-            /**
-             ** 通常会将表示租户id的列名，需要排除租户id的表等信息，封装到一个配置类中（如TenantConfig）
-             **/
             @Override
             public String getTenantIdColumn() {
-                // 返回表中的表示租户id的列名
+                // 对应数据库租户ID的列名
                 return "tenant_id";
             }
 
             @Override
             public boolean ignoreTable(String tableName) {
-                // 表名不为 user2 的表, 不拼接多租户条件
-                return !"ea_archive_complete_rule_field".equals(tableName);
+                // 这是 default 方法,默认返回 false 表示所有表都需要拼多租户条件
+                boolean b = "ea_archive_complete_rule_field".equals(tableName);
+                return false;
             }
         }));
         // 如果用了分页插件注意先 add TenantLineInnerInterceptor 再 add PaginationInnerInterceptor
@@ -56,40 +61,49 @@ public class MybatisPlusConfig {
         interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
         return interceptor;
     }
-
-
-    // @Bean
-    // public MetaObjectHandler metaObjectHandler() {
-    //     return new MetaObjectHandler() {
-    //         @Override
-    //         public void insertFill(MetaObject metaObject) {
-    //             strictInsertFill(metaObject, "createdBy", Long.class, 1L);
-    //         }
-    //
-    //         @Override
-    //         public void updateFill(MetaObject metaObject) {
-    //             strictUpdateFill(metaObject, "lastModifiedBy", Long.class, 1L);
-    //         }
-    //     };
-    // }
-
-    @Component
-    public static class MyMetaObjectHandler implements MetaObjectHandler{
-
-        @Override
-        public void insertFill(MetaObject metaObject) {
-            // this.strictInsertFill(metaObject, "operator", String.class, "Jetty");
-            this.strictInsertFill(metaObject, "createdBy", Long.class, 1L);
-            this.strictInsertFill(metaObject, "created_by", Long.class, 1L);
-        }
-
-        @Override
-        public void updateFill(MetaObject metaObject) {
-            // this.strictUpdateFill(metaObject, "operator", String.class, "Tom");
-            this.strictUpdateFill(metaObject, "lastModifiedBy", Long.class, 1L);
-            this.strictUpdateFill(metaObject, "last_modified_by", Long.class, 1L);
-        }
+    @Bean
+    public ConfigurationCustomizer configurationCustomizer() {
+        return configuration -> configuration.setUseDeprecatedExecutor(false);
     }
+
+
+    @Bean
+    public MetaObjectHandler metaObjectHandler() {
+        return new MetaObjectHandler() {
+            @Override
+            public void insertFill(MetaObject metaObject) {
+                strictInsertFill(metaObject, "tenantId", Long.class, 1L);
+                strictInsertFill(metaObject, "createdBy", Long.class, 1L);
+                strictFillStrategy(metaObject, "createdDate", LocalDateTime::now);
+                strictUpdateFill(metaObject, "lastModifiedBy", Long.class, 1L);
+                strictFillStrategy(metaObject, "lastModifiedDate", LocalDateTime::now);
+            }
+
+            @Override
+            public void updateFill(MetaObject metaObject) {
+                strictUpdateFill(metaObject, "lastModifiedBy", Long.class, 2L);
+                strictFillStrategy(metaObject, "lastModifiedDate", LocalDateTime::now);
+            }
+        };
+    }
+
+    // @Component
+    // public static class MyMetaObjectHandler implements MetaObjectHandler{
+    //
+    //     @Override
+    //     public void insertFill(MetaObject metaObject) {
+    //         // this.strictInsertFill(metaObject, "operator", String.class, "Jetty");
+    //         this.strictInsertFill(metaObject, "createdBy", Long.class, 1L);
+    //         this.strictInsertFill(metaObject, "created_by", Long.class, 1L);
+    //     }
+    //
+    //     @Override
+    //     public void updateFill(MetaObject metaObject) {
+    //         // this.strictUpdateFill(metaObject, "operator", String.class, "Tom");
+    //         this.strictUpdateFill(metaObject, "lastModifiedBy", Long.class, 1L);
+    //         this.strictUpdateFill(metaObject, "last_modified_by", Long.class, 1L);
+    //     }
+    // }
 
 
 }

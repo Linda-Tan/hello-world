@@ -14,6 +14,8 @@
         <result column="rule_code" property="ruleCode" />
         <result column="rule_name" property="ruleName" />
         <result column="rule_desc" property="ruleDesc" />
+        <result column="from_id" property="fromId" />
+        <result column="from_name" property="fromName" />
         <result column="necessary_document" property="necessaryDocument" />
         <result column="is_enabled" property="isEnabled" />
     </resultMap>
@@ -27,7 +29,12 @@
         created_date,
         last_modified_by,
         last_modified_date,
-        rule_code, rule_name, rule_desc, necessary_document, is_enabled
+        rule_code, rule_name, rule_desc, necessary_document, is_enabled,from_id,from_name
     </sql>
+    <select id="test" resultMap="BaseResultMap">
+        select a.* from ea_archive_complete_rule a
+                            LEFT JOIN ea_archive_complete_rule_field b on a.id = b.rule_id
+        where a.rule_name = #{test}
+    </select>
 
 </mapper>

@@ -19,7 +19,10 @@ import lombok.EqualsAndHashCode;
 public class ArchiveCompleteRuleFieldDO extends AbstractAuditDO {
 
     private static final long serialVersionUID = 1L;
-
+    /**
+     * 规则id
+     */
+    private String ruleId;
     /**
      * 资料id
      */

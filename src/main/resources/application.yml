@@ -7,5 +7,5 @@ spring:
     password: 123456Ms3
 
 mybatis-plus:
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations:
+      - classpath:com/junliang/boot/business/mapper/xml/*.xml

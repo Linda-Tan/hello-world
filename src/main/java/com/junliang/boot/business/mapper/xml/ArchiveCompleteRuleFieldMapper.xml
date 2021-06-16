@@ -11,6 +11,7 @@
         <result column="created_date" property="createdDate" />
         <result column="last_modified_by" property="lastModifiedBy" />
         <result column="last_modified_date" property="lastModifiedDate" />
+        <result column="rule_id" property="ruleId" />
         <result column="from_id" property="fromId" />
         <result column="from_name" property="fromName" />
         <result column="field_id" property="fieldId" />
@@ -27,7 +28,7 @@
         created_date,
         last_modified_by,
         last_modified_date,
-        from_id, from_name, field_id, field_name, field_value
+        rule_id,from_id, from_name, field_id, field_name, field_value
     </sql>
 
 </mapper>

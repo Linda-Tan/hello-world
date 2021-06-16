@@ -36,6 +36,16 @@ public class ArchiveCompleteRuleDO extends AbstractAuditDO {
     private String ruleDesc;
 
     /**
+     * 资料大类id
+     */
+    private Long fromId;
+
+    /**
+     * 资料大类名称
+     */
+    private Long fromName;
+
+    /**
      * 必要资料类型
      */
     private String necessaryDocument;
