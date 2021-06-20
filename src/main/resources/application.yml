@@ -7,10 +7,10 @@ spring:
     password: 123456Ms3
 mybatis-plus:
   mapper-locations:
-      - classpath:com/junliang/boot/business/mapper/xml/*.xml
+    - classpath:com/junliang/boot/business/mapper/xml/*.xml
 logging:
   config: classpath:log4j2.xml
   level:
-    -com.junliang.boot.business.mapper : debug #打印sql
+    -com.junliang.boot.business.mapper: debug #打印sql
 server:
   port: 9090
