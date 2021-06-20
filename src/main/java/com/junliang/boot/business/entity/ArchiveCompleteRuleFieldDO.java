@@ -7,11 +7,11 @@ import lombok.EqualsAndHashCode;
 
 /**
  * <p>
- * 档案完整规则配置字段
+ * 字段编码
  * </p>
  *
- * @author Bobby
- * @since 2021-06-15
+ * @author JunLiang
+ * @since 2021-06-19
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -19,10 +19,12 @@ import lombok.EqualsAndHashCode;
 public class ArchiveCompleteRuleFieldDO extends AbstractAuditDO {
 
     private static final long serialVersionUID = 1L;
+
     /**
      * 规则id
      */
-    private String ruleId;
+    private Long ruleId;
+
     /**
      * 资料id
      */
@@ -31,7 +33,7 @@ public class ArchiveCompleteRuleFieldDO extends AbstractAuditDO {
     /**
      * 资料名称
      */
-    private Long fromName;
+    private String fromName;
 
     /**
      * 字段id
@@ -42,6 +44,11 @@ public class ArchiveCompleteRuleFieldDO extends AbstractAuditDO {
      * 字段名称
      */
     private String fieldName;
+
+    /**
+     * 字段编码
+     */
+    private String fieldCode;
 
     /**
      * 字段段值

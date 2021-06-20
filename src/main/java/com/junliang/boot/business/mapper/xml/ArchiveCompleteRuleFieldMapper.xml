@@ -16,6 +16,7 @@
         <result column="from_name" property="fromName" />
         <result column="field_id" property="fieldId" />
         <result column="field_name" property="fieldName" />
+        <result column="field_code" property="fieldCode" />
         <result column="field_value" property="fieldValue" />
     </resultMap>
 
@@ -28,7 +29,7 @@
         created_date,
         last_modified_by,
         last_modified_date,
-        rule_id,from_id, from_name, field_id, field_name, field_value
+        rule_id, from_id, from_name, field_id, field_name, field_code, field_value
     </sql>
 
 </mapper>

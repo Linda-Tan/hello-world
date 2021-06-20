@@ -5,11 +5,14 @@ import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
 import com.baomidou.mybatisplus.generator.config.*;
+import com.baomidou.mybatisplus.generator.config.builder.ConfigBuilder;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
+import com.baomidou.mybatisplus.generator.config.rules.FileType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -20,7 +23,7 @@ import java.util.Scanner;
  * @author junliang.li
  */
 public class CodeGenerator {
-    private static String[] tablePrefix = new String[]{"ea_"};
+    private static final String[] tablePrefix = new String[]{"ea_"};
 
     public static void main(String[] args) {
         // 代码生成器
@@ -29,7 +32,7 @@ public class CodeGenerator {
         // 全局配置
         GlobalConfig globalConfig = new GlobalConfig();
         String projectPath = System.getProperty("user.dir") + "";
-        globalConfig.setOutputDir(projectPath + "/src/main/java");
+        globalConfig.setOutputDir(projectPath + "/src/test/java");
         globalConfig.setAuthor(System.getProperty("user.name"));
         globalConfig.setOpen(false);
         globalConfig.setBaseResultMap(true);
@@ -59,7 +62,6 @@ public class CodeGenerator {
         //         return super.processTypeConvert(globalConfig, fieldType);
         //     }
         // });
-
         mpg.setDataSource(dsc);
 
         // 包配置
@@ -78,9 +80,6 @@ public class CodeGenerator {
 
         // 如果模板引擎是 freemarker
         String templatePath = "/templates/mapper.xml.ftl";
-        // 如果模板引擎是 velocity
-        // String templatePath = "/templates/dao.xml.vm";
-
         // 自定义输出配置
         List<FileOutConfig> focList = new ArrayList<>();
         // 自定义配置会被优先输出
@@ -92,26 +91,39 @@ public class CodeGenerator {
                         + StringPool.DOT_XML;
             }
         });
+        //cfg.setFileOutConfigList(focList);
         /*
          * cfg.setFileCreate(new IFileCreate() {
          * @Override public boolean isCreate(ConfigBuilder configBuilder,
          * FileType fileType, String filePath) { // 判断自定义文件夹是否需要创建
          * checkDir("调用默认方法创建的目录"); return false; } });
          */
-        // cfg.setFileOutConfigList(focList);
+        //开启覆盖
+        globalConfig.setFileOverride(true);
+        cfg.setFileCreate(new IFileCreate() {
+            @Override
+            public boolean isCreate(ConfigBuilder configBuilder, FileType fileType, String filePath) {
+                // 判断自定义文件夹是否需要创建,这里调用默认的方法
+                checkDir(filePath);
+                //对于已存在的文件，只需重复生成 entity 和 mapper.xml
+                File file = new File(filePath);
+                boolean exist = file.exists();
+                if (exist) {
+                    return FileType.XML == fileType || FileType.ENTITY == fileType;
+                }
+                //不存在的文件都需要创建
+                return true;
+            }
+        });
         mpg.setCfg(cfg);
 
         // 配置模板
         TemplateConfig templateConfig = new TemplateConfig();
-
         // 配置自定义输出模板
         //指定自定义模板路径，注意不要带上.ftl/.vm, 会根据使用的模板引擎自动识别
-        // templateConfig.setEntity("templates/entity2.java");
-        // templateConfig.setService();
-        // templateConfig.setController();
-
-        templateConfig.setXml(null);
-        //mpg.setTemplate(templateConfig);
+        templateConfig.setService("ftl/service.java");
+        templateConfig.setServiceImpl(null);
+        mpg.setTemplate(templateConfig);
 
         // 策略配置
         StrategyConfig strategy = new StrategyConfig();
@@ -124,7 +136,7 @@ public class CodeGenerator {
         // 公共父类
         //strategy.setSuperControllerClass("com.baomidou.ant.common.BaseController");
         // 写于父类中的公共字段
-        strategy.setSuperEntityColumns("id","tenant_id", "is_deleted", "created_by", "created_date", "last_modified_by", "last_modified_date");
+        strategy.setSuperEntityColumns("id", "tenant_id", "is_deleted", "created_by", "created_date", "last_modified_by", "last_modified_date");
         strategy.setInclude(scanner("表名，多个英文逗号分割").split(","));
         strategy.setControllerMappingHyphenStyle(true);
         strategy.setTablePrefix(pc.getModuleName() + "_");

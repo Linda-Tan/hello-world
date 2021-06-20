@@ -39,7 +39,7 @@ public class MybatisPlusConfig {
             public Expression getTenantId() {
                 // 返回租户id的值, 这里固定写死为1
                 // 一般是从当前上下文中取出一个 租户id
-                return new LongValue(1);
+                return new LongValue(1367744528473784321L);
             }
 
             @Override

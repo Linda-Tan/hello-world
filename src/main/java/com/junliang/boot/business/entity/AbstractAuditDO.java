@@ -47,7 +47,6 @@ public abstract class AbstractAuditDO {
     /**
      * 删除标记
      */
-    @TableField(select = false)
     @TableLogic(value = "0", delval = "1")
     private Boolean       isDeleted;
 

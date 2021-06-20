@@ -5,7 +5,12 @@ spring:
     url: jdbc:mysql://106.15.120.125:21906/e_archives_private?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useAffectedRows=true&rewriteBatchedStatements=true
     username: artemis
     password: 123456Ms3
-
 mybatis-plus:
   mapper-locations:
       - classpath:com/junliang/boot/business/mapper/xml/*.xml
+logging:
+  config: classpath:log4j2.xml
+  level:
+    -com.junliang.boot.business.mapper : debug #打印sql
+server:
+  port: 9090

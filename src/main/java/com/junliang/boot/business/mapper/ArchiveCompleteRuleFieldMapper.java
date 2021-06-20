@@ -5,11 +5,11 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
  * <p>
- * 档案完整规则配置字段 Mapper 接口
+ * 字段编码 Mapper 接口
  * </p>
  *
- * @author Bobby
- * @since 2021-06-15
+ * @author JunLiang
+ * @since 2021-06-19
  */
 public interface ArchiveCompleteRuleFieldMapper extends BaseMapper<ArchiveCompleteRuleFieldDO> {
 

@@ -10,8 +10,8 @@ import lombok.EqualsAndHashCode;
  * 档案完整规则
  * </p>
  *
- * @author Bobby
- * @since 2021-06-15
+ * @author JunLiang
+ * @since 2021-06-18
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -43,7 +43,7 @@ public class ArchiveCompleteRuleDO extends AbstractAuditDO {
     /**
      * 资料大类名称
      */
-    private Long fromName;
+    private String fromName;
 
     /**
      * 必要资料类型
@@ -53,7 +53,7 @@ public class ArchiveCompleteRuleDO extends AbstractAuditDO {
     /**
      * 启用标记
      */
-    private Boolean isEnabled = true;
+    private Boolean isEnabled;
 
 
 }
