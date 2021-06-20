@@ -29,7 +29,7 @@ public class ArchiveCompleteRuleController {
   @Resource
   private ArchiveCompleteRuleService ruleService;
   @Resource
-  private ArchiveCompleteRuleFieldService ruleService;
+  private ArchiveCompleteRuleFieldService ruleFieldService;
 
   @GetMapping("/test")
   public String test() {
