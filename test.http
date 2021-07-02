@@ -1,0 +1,13 @@
+###
+POST http://localhost:9090/test
+Content-Type: multipart/form-data; boundary=WebAppBoundary; charset=utf-8;
+
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="testfile.pdf"; charset=utf-8;
+Content-Type: application/pdf
+
+< D:/Users/Bobby/Downloads/李军良-体检报告.pdf
+--WebAppBoundary--
+
+
+

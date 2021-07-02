@@ -1,3 +1,5 @@
+server:
+  port: 9090
 spring:
   datasource:
     #  dev
@@ -12,5 +14,4 @@ logging:
   config: classpath:log4j2.xml
   level:
     -com.junliang.boot.business.mapper: debug #打印sql
-server:
-  port: 9090
+
