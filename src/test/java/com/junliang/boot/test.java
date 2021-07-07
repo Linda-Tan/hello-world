@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 
 /**
  * TODO desc
+ *
  * @author junlinag.li
  * @date 2021/7/2
  */
@@ -42,13 +43,17 @@ public class test {
 		System.out.println(split.length);
 		for (int i = 0; i < split.length; i++) {
 			System.out.println(split[i]);
-			String str =  split[i];
-			if ( str.startsWith("[")&&str.endsWith("]")){
+			String str = split[i];
+			if (str.startsWith("[") && str.endsWith("]")) {
+				//array
 
+			} else {
+				//object
 			}
 
-			if (i == split.length -1)
+			if (i == split.length - 1) {
 				System.out.println(split[i]);
+			}
 		}
 
 	}

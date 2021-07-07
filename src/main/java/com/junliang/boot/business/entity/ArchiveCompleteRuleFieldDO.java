@@ -18,42 +18,42 @@ import lombok.EqualsAndHashCode;
 @TableName("ea_archive_complete_rule_field")
 public class ArchiveCompleteRuleFieldDO extends AbstractAuditDO {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    /**
-     * 规则id
-     */
-    private Long ruleId;
+  /**
+   * 规则id
+   */
+  private Long ruleId;
 
-    /**
-     * 资料id
-     */
-    private Long fromId;
+  /**
+   * 资料id
+   */
+  private Long fromId;
 
-    /**
-     * 资料名称
-     */
-    private String fromName;
+  /**
+   * 资料名称
+   */
+  private String fromName;
 
-    /**
-     * 字段id
-     */
-    private Long fieldId;
+  /**
+   * 字段id
+   */
+  private Long fieldId;
 
-    /**
-     * 字段名称
-     */
-    private String fieldName;
+  /**
+   * 字段名称
+   */
+  private String fieldName;
 
-    /**
-     * 字段编码
-     */
-    private String fieldCode;
+  /**
+   * 字段编码
+   */
+  private String fieldCode;
 
-    /**
-     * 字段段值
-     */
-    private String fieldValue;
+  /**
+   * 字段段值
+   */
+  private String fieldValue;
 
 
 }

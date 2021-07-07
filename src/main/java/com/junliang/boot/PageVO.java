@@ -19,10 +19,10 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class PageVO<T> extends Page<T> {
 
-    PageVO(){
-    }
+  PageVO() {
+  }
 
-    PageVO(int page,int size){
-        super(page++,size);
-    }
+  PageVO(int page, int size) {
+    super(page++, size);
+  }
 }
